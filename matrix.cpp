@@ -33,27 +33,17 @@ Matrix::Matrix(const Matrix& other)
 	}
 }
 
-Matrix::Matrix(double* digArr, int size)
+
+Matrix::Matrix(std::vector<double> &vector, int size)
 {
-    assert(NULL != digArr && size > 0);
+    assert(size > 0);
     row = col = size;
     elem = new double*[row];
 
     for (int i = 0; i < row; i++)
     {
         elem[i] = new double[col];
-
-        for (int j = 0; j < col; j++)
-        {
-            if (i == j)
-            {
-                elem[i][j] = digArr[i];
-            }
-            else
-            {
-                elem[i][j] = 0;
-            }
-        }
+        elem[i][i] = vector[i];
     }
 }
 
@@ -177,62 +167,51 @@ void Matrix::swapTwoRow(int row1, int row2)
     std::swap(elem[row1], elem[row2]);
 }
 
-
-
-int Matrix::reverseMatrix(Matrix** rMatrix)
+void Matrix::reducedEchelon()
 {
-	if (row != col)
-	{
-		return ERROR;
-	}
+    for (int i = 0; i < row; i++)
+    {
+        // 选取列主元所在的行
+        int pivotRow = pickPivotRow(i);
+        assert(pivotRow != -1);
 
-	double* digArr = new double[row];
-	for (int i = 0; i < row; i++)
-	{
-		digArr[i] = 1;
-	}
-	Matrix* retMatrix = new Matrix(digArr, row);
-	Matrix tempMatrix(*this);
+        // 选取列主元所在的行与当前行交换
+        swapTwoRow(pivotRow, i);
 
-	for (int i = 0; i < row; i++)
-	{
-		int pivotRow = tempMatrix.pickPivotRow(i);
-		if (-1 == pivotRow)
-		{
-			delete retMatrix;
-			delete[] digArr;
-			return ERROR;
-		}
+        // 选取列主元
+        double pivot = getValue(i, i);
 
-		tempMatrix.swapTwoRow(pivotRow, i);
-		retMatrix->swapTwoRow(pivotRow, i);
+        // 列主元所在行除以列主元
+        rowMulByConst(i, 1.0 / pivot);
 
-        double pivot = tempMatrix.getValue(i, i);
+        for (int j = i + 1; j < row; j++)
+        {
+            // 列主元以下的行变为0
+            double rowValue = getValue(j, i);
+            addRowToAnother(j, i, -1.0 * rowValue);
+        }
+    }
 
-		tempMatrix.rowMulByConst(i, 1.0 / pivot);
-		retMatrix->rowMulByConst(i, 1.0 / pivot);
+    // 现在是上三角矩阵
 
-		for (int j = i + 1; j < row; j++)
-		{
-            double rowValue = tempMatrix.getValue(j, i);
-			tempMatrix.addRowToAnother(j, i, -1.0 * rowValue);
-			retMatrix->addRowToAnother(j, i, -1.0 * rowValue);
-		}
-	} // upper trianglur matrix now
+    for (int i = row - 1; i > 0; i--)
+    {
+        for (int j = i - 1; j >= 0; j--)
+        {
+            double rowValue = getValue(j, i);
+            addRowToAnother(j, i, -1.0 * rowValue);
+        }
+    }
+    // 现在是对角矩阵
+}
 
-	for (int i = row - 1; i > 0; i--)
-	{
-		for (int j = i - 1; j >= 0; j--)
-		{
-            double rowValue = tempMatrix.getValue(j, i);
-			tempMatrix.addRowToAnother(j, i, -1.0 * rowValue);
-			retMatrix->addRowToAnother(j, i, -1.0 * rowValue);
-		}
-	}
-	delete[] digArr;
-	*rMatrix = retMatrix;
+Matrix Matrix::reverseMatrix()
+{
+    assert(row == col);
+    std::vector<double> vector(row, 1.0);
+    Matrix diagMatrix(vector, row);
 
-	return OK;
+    return this->operator/(diagMatrix);
 }
 
 int Matrix::getDetermine(double* det)
@@ -385,6 +364,20 @@ Matrix Matrix::operator*(const Matrix& other)
 	return retMatrix;
 }
 
+Matrix Matrix::operator/(const Matrix& other)
+{
+    Matrix retMatrix(*this);
+    retMatrix.pushStack(other, DIRECTION_HORIZONTAL);
+    retMatrix.reducedEchelon();
+    return retMatrix.getCols(col, retMatrix.col);
+}
+
+Matrix Matrix::operator/(const double scaler)
+{
+    assert(fabs(scaler - 0.0) > EPS);
+    return this->operator*(1.0 / scaler);
+}
+
 void Matrix::operator=(const Matrix& other)
 {
     if (this == &other)
@@ -434,6 +427,28 @@ bool Matrix::operator==(const Matrix& other)
 	}
 
 	return true;
+}
+
+Matrix Matrix::getRows(int startRow, int endRow)
+{
+    assert(startRow < endRow && endRow <= row);
+    Matrix retMatrix(endRow - startRow, col);
+    for (int r = startRow; r < endRow; r++)
+    {
+        memcpy(retMatrix.elem[r - startRow], elem[r], sizeof(double) * retMatrix.col);
+    }
+    return retMatrix;
+}
+
+Matrix Matrix::getCols(int startCol, int endCol)
+{
+    assert(startCol < endCol && endCol <= col);
+    Matrix retMatrix(row, endCol - startCol);
+    for (int r = 0; r < row; r++)
+    {
+        memcpy(retMatrix.elem[r], elem[r] + startCol, sizeof(double) * retMatrix.col);
+    }
+    return retMatrix;
 }
 
 void Matrix::pushStack(const Matrix& other, Stack_Direction_E direction)

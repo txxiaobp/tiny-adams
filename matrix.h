@@ -1,7 +1,11 @@
 #define ERROR 1
 #define OK 0
 
+#include <vector>
+
+
 #define EPS 1e-4
+
 
 typedef enum
 {
@@ -16,7 +20,7 @@ class Matrix
 public:
     Matrix(int row = 3, int col = 3);
 	Matrix(const Matrix& other);
-    Matrix(double* digArr, int size);
+    Matrix(std::vector<double> &vector, int size); // diag matrix
 	~Matrix();
 	
     void operator=(const Matrix& other);
@@ -24,9 +28,13 @@ public:
     bool operator!=(const Matrix& other);
     Matrix operator*(const Matrix& other);
     Matrix operator*(const double scaler);
+    Matrix operator/(const Matrix& other);
+    Matrix operator/(const double scaler);
     Matrix operator+(const Matrix& other);
     Matrix operator-(const Matrix& other);
 
+    Matrix getRows(int startRow, int endRow);
+    Matrix getCols(int startCol, int endCol);
     void pushStack(const Matrix& other, Stack_Direction_E direction);
     void pushHorizontalStack(const Matrix& other);
     void pushVerticalStack(const Matrix& other);
@@ -43,7 +51,8 @@ public:
     void swapTwoRow(int row1, int row2); // s交换两行
 
 	int getDetermine(double* det); // 计算行列式
-	int reverseMatrix(Matrix** rMatrix); // 计算逆矩阵
+    Matrix reverseMatrix(); // 计算逆矩阵
+    void reducedEchelon();
 
     int getRank(); // 计算矩阵的秩
 
