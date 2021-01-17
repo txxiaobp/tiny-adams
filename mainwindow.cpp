@@ -7,6 +7,8 @@
 #include "circle.h"
 #include "rectangle.h"
 
+const int BAR_HEIGHT = 20;
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -25,6 +27,8 @@ MainWindow::MainWindow(QWidget *parent)
     , lineAction(insertMenu->addAction("直线 (L)"))
     , circleAction(insertMenu->addAction("圆形 (C)"))
     , rectAction(insertMenu->addAction("矩形 (R)"))
+
+    , guideLabel(new QLabel())
 {
     this->resize(width, height);
     this->setMouseTracking(true);      //设置为不按下鼠标键触发moveEvent
@@ -32,6 +36,9 @@ MainWindow::MainWindow(QWidget *parent)
     connectSignals();
     setMenuBar(mBar);
     setStatusBar(sBar);
+
+    sBar->addWidget(guideLabel);
+    guideLabel->setFixedSize(160, BAR_HEIGHT);
 }
 
 void MainWindow::connectSignals()
@@ -100,7 +107,7 @@ void MainWindow::mousePressEvent(QMouseEvent *e)
     QPoint point(e->x(), e->y());
     currentShape->addPoint(point);
 
-    qDebug() << currentShape->getStatus().data();
+    setStatusBarString(currentShape->getStatus());
 
     if (!currentShape->isReady())
     {
@@ -154,9 +161,13 @@ void MainWindow::drawShape(ShapeEnum shapeEnum)
 
     if (currentShape)
     {
-        qDebug() << currentShape->getStatus().data();
+        setStatusBarString(currentShape->getStatus());
     }
     update();
 }
 
+void MainWindow::setStatusBarString(QString string)
+{
+    guideLabel->setText(string);
+}
 

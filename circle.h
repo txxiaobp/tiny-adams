@@ -15,7 +15,7 @@ public:
     void draw(QPainter *qPainter);
     void drawAuxiliary(QPainter *qPainter, QPoint &qPoint);
 
-    std::string getStatus();
+    QString getStatus();
 
 private:
     QPoint* getTempPoint();

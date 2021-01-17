@@ -6,6 +6,7 @@
 #include <QMenuBar>
 #include <QMenu>
 #include <QPoint>
+#include <QLabel>
 #include <vector>
 #include <map>
 #include "line.h"
@@ -32,6 +33,7 @@ public:
 
 private:
     void connectSignals();
+    void setStatusBarString(QString string);
 
 private:
     Ui::MainWindow *ui;
@@ -52,5 +54,7 @@ private:
     QAction *lineAction;
     QAction *circleAction;
     QAction *rectAction;
+
+    QLabel *guideLabel;
 };
 #endif // MAINWINDOW_H

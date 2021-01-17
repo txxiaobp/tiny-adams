@@ -36,17 +36,17 @@ void Rectangle::draw(QPainter *qPainter)
     qPainter->drawRect(leftUpPoint.rx(), leftUpPoint.ry(), rightDownPoint.rx() - leftUpPoint.rx(), rightDownPoint.ry() - leftUpPoint.ry());
 }
 
-std::string Rectangle::getStatus()
+QString Rectangle::getStatus()
 {
     if (leftUpPoint.isNull())
     {
-        return std::string("请选择矩形的一个角点");
+        return QString("矩形：1. 请选择矩形的一个角点");
     }
     else if (rightDownPoint.isNull())
     {
-        return std::string("请选择矩形的另一个角点");
+        return QString("矩形：2. 请选择矩形的另一个角点");
     }
-    return std::string();
+    return QString();
 }
 
 QPoint* Rectangle::getTempPoint()

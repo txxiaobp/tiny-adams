@@ -27,7 +27,7 @@ public:
     virtual void draw(QPainter *qPainter) = 0;
     virtual void drawAuxiliary(QPainter *qPainter, QPoint &qPoint) = 0;
 
-    virtual std::string getStatus() = 0;
+    virtual QString getStatus() = 0;
     virtual QPoint* getTempPoint() = 0;
 
     bool isReady() { return ready; }

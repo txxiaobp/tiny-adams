@@ -8,16 +8,17 @@ Line::Line()
 }
 
 
-std::string Line::getStatus()
+QString Line::getStatus()
 {
     if (startPoint.isNull())
     {
-        return std::string("请选择起点");
+        return QString("直线：1. 请选择起点");
     }
     else if (endPoint.isNull())
     {
-        return std::string("请选择终点");
+        return QString("直线：2. 请选择终点");
     }
+    return QString();
 }
 
 QPoint* Line::getTempPoint()

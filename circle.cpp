@@ -35,17 +35,17 @@ void Circle::draw(QPainter *qPainter)
     qPainter->drawEllipse(centerPoint.rx() - radius, centerPoint.ry() - radius, 2 * radius, 2 * radius);
 }
 
-std::string Circle::getStatus()
+QString Circle::getStatus()
 {
     if (centerPoint.isNull())
     {
-        return std::string("请选择圆心");
+        return QString("圆：1. 请选择圆心");
     }
     else if (radius <= 0.0)
     {
-        return std::string("请选择圆圆周上的一点");
+        return QString("圆：2. 请选择圆圆周上的一点");
     }
-    return std::string();
+    return QString();
 }
 
 QPoint* Circle::getTempPoint()
