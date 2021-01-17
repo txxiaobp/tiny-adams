@@ -1,26 +1,29 @@
-#ifndef LINE_H
-#define LINE_H
+#ifndef CIRCLE_H
+#define CIRCLE_H
+
 
 #include <QObject>
 #include <QPoint>
 #include "shape.h"
 
-class Line : public Shape
+class Circle : public Shape
 {
 public:
-    Line();
+    Circle();
 
     void addPoint(QPoint qPoint);
     void draw(QPainter *qPainter);
     void drawAuxiliary(QPainter *qPainter, QPoint &qPoint);
+
     std::string getStatus();
 
 private:
     QPoint* getTempPoint();
 
 private:
-    QPoint startPoint;
-    QPoint endPoint;
+    QPoint centerPoint;
+    double radius;
 };
 
-#endif // LINE_H
+
+#endif // CIRCLE_H

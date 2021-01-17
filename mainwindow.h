@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QMouseEvent>
+#include <QMenuBar>
+#include <QMenu>
 #include <QPoint>
 #include <vector>
 #include <map>
@@ -25,13 +27,21 @@ public:
     void keyPressEvent(QKeyEvent *event);
     void paintEvent(QPaintEvent *event);
     void mousePressEvent(QMouseEvent *e);
+    
+    void drawShape(ShapeEnum shapeEnum);
 
 private:
     Ui::MainWindow *ui;
     int width;
     int height;
-    QPoint point;
     ShapeBase shapeBase;
+    Shape *currentShape;
+    QPoint *tempPoint;
+    QPoint mousePos;
+
+    QMenuBar *mBar;
+    QStatusBar *sBar;
+    QMenu *lineMenu;
 
 };
 #endif // MAINWINDOW_H

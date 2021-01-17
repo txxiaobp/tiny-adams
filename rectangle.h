@@ -1,14 +1,15 @@
-#ifndef LINE_H
-#define LINE_H
+#ifndef RECTANGLE_H
+#define RECTANGLE_H
+
 
 #include <QObject>
 #include <QPoint>
 #include "shape.h"
 
-class Line : public Shape
+class Rectangle : public Shape
 {
 public:
-    Line();
+    Rectangle();
 
     void addPoint(QPoint qPoint);
     void draw(QPainter *qPainter);
@@ -19,8 +20,8 @@ private:
     QPoint* getTempPoint();
 
 private:
-    QPoint startPoint;
-    QPoint endPoint;
+    QPoint leftUpPoint;
+    QPoint rightDownPoint;
 };
 
-#endif // LINE_H
+#endif // RECTANGLE_H

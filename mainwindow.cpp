@@ -4,19 +4,30 @@
 #include <QDebug>
 
 #include "line.h"
+#include "circle.h"
+#include "rectangle.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , width(500)
-    , height(400)
+    , width(800)
+    , height(600)
+    , currentShape(nullptr)
+    , tempPoint (nullptr)
+
+    , mBar(menuBar())
+    , sBar(statusBar())
+    , lineMenu(mBar->addMenu("直线"))
 {
     ui->setupUi(this);
 
     this->resize(width, height);
     this->setMouseTracking(true);      //设置为不按下鼠标键触发moveEvent
 
+
+    setMenuBar(mBar);
+    setStatusBar(sBar);
 }
 
 MainWindow::~MainWindow()
@@ -26,24 +37,29 @@ MainWindow::~MainWindow()
 
 void MainWindow::paintEvent(QPaintEvent *)
 {
-    QPainter painter(this);
+    QPainter qPainter(this);
+    qPainter.setRenderHint(QPainter::HighQualityAntialiasing);
+
     std::vector<Shape*> shapes = shapeBase.getShapes();
     for (auto shape : shapes)
     {
-        shape->draw(&painter);
+        shape->draw(&qPainter);
+    }
+    if (currentShape)
+    {
+        currentShape->drawAuxiliary(&qPainter, mousePos);
     }
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent* event)
 {
-    QPoint mousepos = event->pos();
-    qDebug() << mousepos.rx() << " " << mousepos.ry();
+    mousePos = event->pos();
 
     //在坐标（0 ~ width，0 ~ height）范围内改变鼠标形状
-    if(mousepos.rx() > 0
-        && mousepos.rx() < width
-        && mousepos.ry() > 0
-        && mousepos.ry() < height)
+    if(mousePos.rx() > 0
+        && mousePos.rx() < width
+        && mousePos.ry() > 0
+        && mousePos.ry() < height)
     {
         this->setCursor(Qt::CrossCursor);
     }
@@ -51,40 +67,83 @@ void MainWindow::mouseMoveEvent(QMouseEvent* event)
     {
         this->setCursor(Qt::ArrowCursor);      //范围之外变回原来形状
     }
+    if (tempPoint)
+    {
+        update();
+    }
 }
 
 
 void MainWindow::mousePressEvent(QMouseEvent *e)
 {
-    if (point.isNull())
+    if (!currentShape)
     {
-        qDebug() << "mousePressEvent 1";
-        point.setX(e->x());
-        point.setY(e->y());
+        return;
     }
-    else
+
+    QPoint point(e->x(), e->y());
+    currentShape->addPoint(point);
+
+    qDebug() << currentShape->getStatus().data();
+
+    tempPoint = currentShape->getTempPoint();
+
+    if (!currentShape->isReady())
     {
-        qDebug() << "mousePressEvent 2";
-        QPoint point2(e->x(), e->y());
-        shapeBase.push(new Line(point, point2));
-        update();
-        point = QPoint();
+        return;
     }
+
+    shapeBase.push(currentShape);
+    currentShape = nullptr;
+    update();
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *ev)
 {
     if(ev->key() == Qt::Key_C)
     {
-        qDebug() << "c";
+        drawShape(SHAPE_CIRCLE);
+        update();
         return;
     }
 
     if(ev->key() == Qt::Key_L)
     {
-        qDebug() << "line";
+        drawShape(SHAPE_LINE);
         update();
+        return;
+    }
 
+    if(ev->key() == Qt::Key_R)
+    {
+        drawShape(SHAPE_RECTANGLE);
+        update();
         return;
     }
 }
+
+void MainWindow::drawShape(ShapeEnum shapeEnum)
+{
+    switch (shapeEnum)
+    {
+    case SHAPE_LINE:
+        currentShape = new Line();
+        break;
+    case SHAPE_CIRCLE:
+        currentShape = new Circle();
+        break;
+    case SHAPE_RECTANGLE:
+        currentShape = new Rectangle();
+        break;
+    default:
+        currentShape = nullptr;
+        break;
+    }
+
+    if (currentShape)
+    {
+        qDebug() << currentShape->getStatus().data();
+    }
+}
+
+

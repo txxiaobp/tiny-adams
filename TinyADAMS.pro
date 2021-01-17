@@ -9,15 +9,18 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    circle.cpp \
     line.cpp \
     main.cpp \
     mainwindow.cpp \
-    shape.cpp \
+    rectangle.cpp \
     shape_base.cpp
 
 HEADERS += \
+    circle.h \
     line.h \
     mainwindow.h \
+    rectangle.h \
     shape.h \
     shape_base.h
 

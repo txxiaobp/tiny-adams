@@ -1,27 +1,65 @@
 #include "line.h"
 
-//Line::Line(QPoint start, QPoint end)
 Line::Line()
-    : start(QPoint())
-    , end(QPoint())
+    : Shape(Qt::blue, 4)
+    , startPoint(QPoint())
+    , endPoint(QPoint())
 {
-
 }
 
-Line::Line(QPoint start, QPoint end)
-    : start(start)
-    , end(end)
-{
 
+std::string Line::getStatus()
+{
+    if (startPoint.isNull())
+    {
+        return std::string("请选择起点");
+    }
+    else if (endPoint.isNull())
+    {
+        return std::string("请选择终点");
+    }
+}
+
+QPoint* Line::getTempPoint()
+{
+    if (!startPoint.isNull() && endPoint.isNull())
+    {
+        return &startPoint;
+    }
+    return nullptr;
+}
+
+void Line::addPoint(QPoint qPoint)
+{
+    if (startPoint.isNull())
+    {
+        startPoint = qPoint;
+    }
+    else if (endPoint.isNull())
+    {
+        endPoint = qPoint;
+        ready = true;
+    }
 }
 
 void Line::draw(QPainter *qPainter)
 {
-    if (start.isNull() || end.isNull())
+    if (startPoint.isNull() || endPoint.isNull())
     {
         return;
     }
 
-    qPainter->setPen(QPen(Qt::blue,4));//设置画笔形式
-    qPainter->drawLine(start.rx(), start.ry(), end.rx(), end.ry());
+    qPainter->setPen(QPen(shapeColor, shapeType));//设置画笔形式
+    qPainter->drawLine(startPoint.rx(), startPoint.ry(), endPoint.rx(), endPoint.ry());
+}
+
+void Line::drawAuxiliary(QPainter *qPainter, QPoint &qPoint)
+{
+    QPoint *tempPoint = getTempPoint();
+
+    if (tempPoint && !qPoint.isNull())
+    {
+        qPainter->setPen(QPen(Qt::blue, 1));//设置画笔形式
+        qPainter->drawLine(tempPoint->rx(), tempPoint->ry(), qPoint.rx(), qPoint.ry());
+    }
 }
