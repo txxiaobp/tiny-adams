@@ -20,6 +20,8 @@ Matrix::Matrix(int row, int col)
 }
 
 Matrix::Matrix(std::vector<double> &vector, int row, int col)
+    : row(row)
+    , col(col)
 {
     assert(row > 0 && col > 0);
     assert(row * col <= int(vector.size()));
@@ -176,7 +178,8 @@ void Matrix::rowMulByConst(int row, double factor)
 
 void Matrix::addRowToAnother(int dRow, int sRow, double factor)
 {
-    assert (row >= 0 && row < this->row);
+    assert (dRow >= 0 && dRow < this->row);
+    assert (sRow >= 0 && sRow < this->row);
 
 	for (int i = 0; i < col; i++)
 	{
@@ -186,7 +189,8 @@ void Matrix::addRowToAnother(int dRow, int sRow, double factor)
 
 void Matrix::swapTwoRow(int row1, int row2)
 {
-    assert ((row >= 0 && row < this->row) && (col >= 0 || col < this->col));
+    assert (row1 >= 0 && row1 < this->row);
+    assert (row2 >= 0 || row2 < this->row);
 
     std::swap(elem[row1], elem[row2]);
 }
@@ -491,7 +495,7 @@ void Matrix::pushHorizontalStack(const Matrix& other)
 
     for (int r = 0; r < row; r++)
     {
-        double *tmp = new double[col];
+        double *tmp = new double[col + other.col];
         memcpy(tmp, elem[r], sizeof(double) * col);
         memcpy(tmp + col, other.elem[r], sizeof(double) * other.col);
 
@@ -533,5 +537,15 @@ void Matrix::pushVerticalStack(const Matrix& other)
     row += other.row;
 }
 
-
+void Matrix::showMatrix()
+{
+    for (int i = 0; i < row; i++)
+    {
+        for (int j = 0; j < col; j++)
+        {
+            std::cout << elem[i][j] << "  ";
+        }
+        std::cout <<std::endl;
+    }
+}
 

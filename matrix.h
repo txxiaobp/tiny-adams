@@ -4,7 +4,7 @@
 #include <vector>
 
 
-#define EPS 1e-4
+#define EPS 1e-10
 
 
 typedef enum
@@ -24,6 +24,8 @@ public:
     Matrix(std::vector<double> &vector, int size); // diag matrix
 	~Matrix();
 	
+    void showMatrix();
+
     void operator=(const Matrix& other);
     bool operator==(const Matrix& other);
     bool operator!=(const Matrix& other);
@@ -42,6 +44,7 @@ public:
     Matrix reverseMatrix(); // 计算逆矩阵
     int getDetermine(); // 计算行列式
     int getRank(); // 计算矩阵的秩
+    bool isFullRank() { return getRank() == col; }
 
 private:
     bool isNearlyZero(int row, int col);
