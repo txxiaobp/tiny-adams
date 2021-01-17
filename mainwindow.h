@@ -51,6 +51,9 @@ private:
     QMenu *insertMenu;
 
     QAction *openAction;
+
+    QAction *revokeAction;
+
     QAction *lineAction;
     QAction *circleAction;
     QAction *rectAction;

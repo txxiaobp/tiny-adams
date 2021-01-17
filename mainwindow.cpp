@@ -24,6 +24,9 @@ MainWindow::MainWindow(QWidget *parent)
     , insertMenu(mBar->addMenu("插入"))
 
     , openAction(fileMenu->addAction("开始 (S)"))
+
+    , revokeAction(editMenu->addAction("撤销"))
+
     , lineAction(insertMenu->addAction("直线 (L)"))
     , circleAction(insertMenu->addAction("圆形 (C)"))
     , rectAction(insertMenu->addAction("矩形 (R)"))
@@ -53,6 +56,11 @@ void MainWindow::connectSignals()
 
     connect(rectAction, &QAction::triggered, [&](){
         drawShape(SHAPE_RECTANGLE);
+    });
+
+    connect(revokeAction, &QAction::triggered, [&](){
+        shapeBase.pop();
+        update();
     });
 }
 

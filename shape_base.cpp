@@ -31,5 +31,28 @@ std::vector<Shape*> ShapeBase::getShapes()
 
 void ShapeBase::push(Shape *shape)
 {
-    shapeMap.insert(std::make_pair(shapeId++, shape));
+    if (shapeStack.size() >= SHAPE_STACK_SIZE)
+    {
+        shapeStack.pop_front();
+    }
+
+    shapeStack.push_back(shapeId);
+    shapeMap.insert(std::make_pair(shapeId, shape));
+    shapeId++;
+}
+
+void ShapeBase::pop()
+{
+    if (isEmpty())
+    {
+        return;
+    }
+    int lastShapeId = shapeStack.back();
+    shapeStack.pop_back();
+    shapeMap.erase(lastShapeId);
+}
+
+bool ShapeBase::isEmpty()
+{
+    return shapeStack.empty();
 }
