@@ -3,7 +3,6 @@
 #include <cassert>
 #include <iostream>
 #include <cmath>
-#include <ctime>
 #include <cstdlib>
 
 
@@ -18,6 +17,31 @@ Matrix::Matrix(int row, int col)
 	{
         elem[r] = new double[col];
 	}
+}
+
+Matrix::Matrix(std::vector<double> &vector, int row, int col)
+{
+    assert(row > 0 && col > 0);
+    assert(row * col <= int(vector.size()));
+
+    elem = new double*[row];
+    int vecIndex = 0;
+
+    for (int r = 0; r < row; r++)
+    {
+        elem[r] = new double[col];
+        for (int c = 0; c < col; c++)
+        {
+            if (vecIndex >= int(vector.size()))
+            {
+                elem[r][c] = 0.0;
+            }
+            else
+            {
+                elem[r][c] = vector[vecIndex++];
+            }
+        }
+    }
 }
 
 Matrix::Matrix(const Matrix& other)

@@ -1,5 +1,5 @@
-#define ERROR 1
-#define OK 0
+#ifndef MATRIX_H
+#define MATRIX_H
 
 #include <vector>
 
@@ -18,7 +18,8 @@ typedef enum
 class Matrix
 {
 public:
-    Matrix(int row = 3, int col = 3);
+    Matrix(int row, int col);
+    Matrix(std::vector<double> &vector, int row, int col);
 	Matrix(const Matrix& other);
     Matrix(std::vector<double> &vector, int size); // diag matrix
 	~Matrix();
@@ -37,7 +38,6 @@ public:
     int getCol() const; //获取列数
     double getValue(int row, int col) const; // 获得数值
     void setValue(int row, int col, double value); // 赋值
-
 
     Matrix reverseMatrix(); // 计算逆矩阵
     int getDetermine(); // 计算行列式
@@ -70,4 +70,6 @@ private:
     int row;
     int col;
 };
+
+#endif
 
