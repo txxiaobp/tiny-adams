@@ -214,33 +214,28 @@ Matrix Matrix::reverseMatrix()
     return this->operator/(diagMatrix);
 }
 
-int Matrix::getDetermine(double* det)
+int Matrix::getDetermine()
 {
-	if (row != col)
-	{
-		return ERROR;
-	}
-
 	Matrix tempMatrix(*this);
-	*det = 1;
+    double det = 1.0;
 
 	for (int i = 0; i < row; i++)
 	{
 		int pivotRow = tempMatrix.pickPivotRow(i);
 		if (-1 == pivotRow)
 		{
-			*det = 0;
-			return OK;
+            det = 0.0;
+            break;
 		}
 
 		if (pivotRow != i)
 		{
 			tempMatrix.swapTwoRow(pivotRow, i);
-			*det = -*det;
+            det = -det;
 		}
 
         double pivot = tempMatrix.getValue(i, i);
-		*det *= pivot;
+        det *= pivot;
 
 		double mulFactor = -1.0 / pivot;
 
@@ -249,9 +244,9 @@ int Matrix::getDetermine(double* det)
             double rowValue = tempMatrix.getValue(j, i);
 			tempMatrix.addRowToAnother(j, i, mulFactor * rowValue);
 		}
-	} // upper trianglur matrix now
+    }
 
-	return OK;
+    return det;
 }
 
 int Matrix::getRank()
@@ -412,7 +407,7 @@ bool Matrix::operator==(const Matrix& other)
 
 	if (this->row != other.row || this->col != other.col)
 	{
-		return false;
+        return false;
 	}
 
 	for (int i = 0; i < row; i++)
