@@ -33,18 +33,28 @@ Matrix::Matrix(const Matrix& other)
 	}
 }
 
-// 生成对角矩阵
 Matrix::Matrix(double* digArr, int size)
 {
-	assert(NULL != digArr && size > 0);
-	row = col = size;
+    assert(NULL != digArr && size > 0);
+    row = col = size;
     elem = new double*[row];
 
-	for (int i = 0; i < row; i++)
-	{
+    for (int i = 0; i < row; i++)
+    {
         elem[i] = new double[col];
-        elem[i][i] = digArr[i];
-	}
+
+        for (int j = 0; j < col; j++)
+        {
+            if (i == j)
+            {
+                elem[i][j] = digArr[i];
+            }
+            else
+            {
+                elem[i][j] = 0;
+            }
+        }
+    }
 }
 
 Matrix::~Matrix()
@@ -101,12 +111,12 @@ int Matrix::pickPivotRow(int startRow)
 	return tempRow;
 }
 
-int Matrix::getRow()
+int Matrix::getRow() const
 {
 	return row;
 }
 
-int Matrix::getCol()
+int Matrix::getCol() const
 {
 	return col;
 }
@@ -119,7 +129,7 @@ void Matrix::setValue(int row, int col, double value)
 }
 
 
-double Matrix::getValue(int row, int col)
+double Matrix::getValue(int row, int col) const
 {
     assert ((row >= 0 && row < this->row) && (col >= 0 || col < this->col));
 
@@ -296,96 +306,103 @@ int Matrix::getRank()
 	return rank;
 }
 
-Matrix* matrixAdd(Matrix& lMatrix, Matrix& rMatrix)
+Matrix Matrix::operator+(const Matrix& other)
 {
-	assert(lMatrix.getRow() == rMatrix.getRow());
-	assert(lMatrix.getCol() == rMatrix.getCol());
+    assert(row == other.row);
+    assert(col == other.col);
 
-	int row = lMatrix.getRow();
-	int col = lMatrix.getCol();
-	Matrix* retMatrix = new Matrix(row, col);
+    Matrix retMatrix(row, col);
 
 	for (int i = 0; i < row; i++)
 	{
 		for (int j = 0; j < col; j++)
 		{
-            double lValue = lMatrix.getValue(i, j);
-            double rValue = rMatrix.getValue(i, j);
-
-			retMatrix->setValue(i, j, lValue + rValue);
+            double sum = getValue(i, j) + other.getValue(i, j);
+            retMatrix.setValue(i, j, sum);
 		}
 	}
 
 	return retMatrix;
 }
 
-Matrix* matrixSub(Matrix& lMatrix, Matrix& rMatrix)
+Matrix Matrix::operator-(const Matrix& other)
 {
-	assert(lMatrix.getRow() == rMatrix.getRow());
-	assert(lMatrix.getCol() == rMatrix.getCol());
+    assert(row == other.row);
+    assert(col == other.col);
 
-	int row = lMatrix.getRow();
-	int col = lMatrix.getCol();
-	Matrix* retMatrix = new Matrix(row, col);
+    Matrix retMatrix(row, col);
+
+    for (int i = 0; i < row; i++)
+    {
+        for (int j = 0; j < col; j++)
+        {
+            double sub = getValue(i, j) - other.getValue(i, j);
+            retMatrix.setValue(i, j, sub);
+        }
+    }
+
+    return retMatrix;
+}
+
+Matrix Matrix::operator*(const double scaler)
+{
+    Matrix retMatrix(row, col);
 
 	for (int i = 0; i < row; i++)
 	{
 		for (int j = 0; j < col; j++)
 		{
-            double lValue = lMatrix.getValue(i, j);
-            double rValue = rMatrix.getValue(i, j);
-
-			retMatrix->setValue(i, j, lValue - rValue);
+            double mul = getValue(i, j) * scaler;
+            retMatrix.setValue(i, j, mul);
 		}
 	}
 
 	return retMatrix;
 }
 
-Matrix* matrixScalerMul(Matrix& matrix, double scaler)
+Matrix Matrix::operator*(const Matrix& other)
 {
-	int row = matrix.getRow();
-	int col = matrix.getCol();
-	Matrix* retMatrix = new Matrix(row, col);
+    assert(col == other.row);
 
-	for (int i = 0; i < row; i++)
+    int retRow = row;
+    int retCol = other.col;
+    int tmpRow = col;
+    Matrix retMatrix(retRow, retCol);
+
+    for (int i = 0; i < retRow; i++)
 	{
-		for (int j = 0; j < col; j++)
-		{
-            double value = matrix.getValue(i, j);
-			retMatrix->setValue(i, j, scaler * value);
-		}
-	}
-
-	return retMatrix;
-}
-
-Matrix* matrixMul(Matrix& lMatrix, Matrix& rMatrix)
-{
-	assert(lMatrix.getCol() == rMatrix.getRow());
-
-	int row = lMatrix.getRow();
-	int col = rMatrix.getCol();
-	int rowCol = lMatrix.getCol();
-	Matrix* retMatrix = new Matrix(row, col);
-
-	for (int i = 0; i < row; i++)
-	{
-		for (int j = 0; j < col; j++)
+        for (int j = 0; j < retCol; j++)
 		{
 			double sum = 0;
-			for (int k = 0; k < rowCol; k++)
+            for (int k = 0; k < tmpRow; k++)
 			{
-                double lValue = lMatrix.getValue(i, k);
-                double rValue = rMatrix.getValue(k, j);
-
-				sum += lValue * rValue;
+                sum += getValue(i, k) * other.getValue(k, j);
 			}
-			retMatrix->setValue(i, j, sum);
+            retMatrix.setValue(i, j, sum);
 		}
 	}
 
 	return retMatrix;
+}
+
+void Matrix::operator=(const Matrix& other)
+{
+    if (this == &other)
+    {
+        return;
+    }
+
+    this->~Matrix();
+
+    row = other.row;
+    col = other.col;
+    elem = new double*[row];
+
+    for (int r = 0; r < row; r++)
+    {
+        elem[r] = new double[col];
+        memcpy(elem[r], other.elem[r], sizeof(double) * col);
+    }
 }
 
 bool Matrix::operator!=(const Matrix& other)
@@ -395,6 +412,11 @@ bool Matrix::operator!=(const Matrix& other)
 
 bool Matrix::operator==(const Matrix& other)
 {
+    if (this == &other)
+    {
+        return true;
+    }
+
 	if (this->row != other.row || this->col != other.col)
 	{
 		return false;
@@ -414,8 +436,68 @@ bool Matrix::operator==(const Matrix& other)
 	return true;
 }
 
+void Matrix::pushStack(const Matrix& other, Stack_Direction_E direction)
+{
+    switch (direction)
+    {
+    case DIRECTION_HORIZONTAL:
+        pushHorizontalStack(other);
+        break;
+    case DIRECTION_VERTICAL:
+        pushVerticalStack(other);
+        break;
+    default:
+        break;
+    }
+}
+
+void Matrix::pushHorizontalStack(const Matrix& other)
+{
+    assert(row == other.row);
+
+    for (int r = 0; r < row; r++)
+    {
+        double *tmp = new double[col];
+        memcpy(tmp, elem[r], sizeof(double) * col);
+        memcpy(tmp + col, other.elem[r], sizeof(double) * other.col);
+
+        std::swap(elem[r], tmp);
+        delete []tmp;
+        tmp = nullptr;
+    }
+    col += other.col;
+}
+
+void Matrix::pushVerticalStack(const Matrix& other)
+{
+    assert(col == other.col);
+
+    double **tmp = new double*[row + other.row];
+
+    for (int r = 0; r < row; r++)
+    {
+        memcpy(tmp[r], elem[r], sizeof(double) * col);
+    }
+    for (int r = 0; r < other.row; r++)
+    {
+        memcpy(tmp[row + r], other.elem[r], sizeof(double) * col);
+    }
+    std::swap(tmp, elem);
 
 
+    for (int r = 0; r < row; r++)
+    {
+        if (tmp[r])
+        {
+            delete []tmp[r];
+            tmp[r] = nullptr;
+        }
+    }
+    delete []tmp;
+    tmp = nullptr;
+
+    row += other.row;
+}
 
 
 

@@ -113,7 +113,6 @@ void MainWindow::mouseMoveEvent(QMouseEvent* event)
         str += std::to_string(mousePos.rx()).data();
         str += ", Y: ";
         str += std::to_string(mousePos.rx()).data();
-        qDebug() << str;
         mousePosLabel->setText(str);
     }
     else
