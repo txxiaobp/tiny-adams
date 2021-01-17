@@ -31,17 +31,26 @@ public:
     void drawShape(ShapeEnum shapeEnum);
 
 private:
+    void connectSignals();
+
+private:
     Ui::MainWindow *ui;
     int width;
     int height;
     ShapeBase shapeBase;
     Shape *currentShape;
-    QPoint *tempPoint;
     QPoint mousePos;
 
     QMenuBar *mBar;
     QStatusBar *sBar;
-    QMenu *lineMenu;
 
+    QMenu *fileMenu;
+    QMenu *editMenu;
+    QMenu *insertMenu;
+
+    QAction *openAction;
+    QAction *lineAction;
+    QAction *circleAction;
+    QAction *rectAction;
 };
 #endif // MAINWINDOW_H

@@ -14,20 +14,39 @@ MainWindow::MainWindow(QWidget *parent)
     , width(800)
     , height(600)
     , currentShape(nullptr)
-    , tempPoint (nullptr)
 
     , mBar(menuBar())
     , sBar(statusBar())
-    , lineMenu(mBar->addMenu("直线"))
-{
-    ui->setupUi(this);
+    , fileMenu(mBar->addMenu("文件"))
+    , editMenu(mBar->addMenu("编辑"))
+    , insertMenu(mBar->addMenu("插入"))
 
+    , openAction(fileMenu->addAction("开始 (S)"))
+    , lineAction(insertMenu->addAction("直线 (L)"))
+    , circleAction(insertMenu->addAction("圆形 (C)"))
+    , rectAction(insertMenu->addAction("矩形 (R)"))
+{
     this->resize(width, height);
     this->setMouseTracking(true);      //设置为不按下鼠标键触发moveEvent
 
-
+    connectSignals();
     setMenuBar(mBar);
     setStatusBar(sBar);
+}
+
+void MainWindow::connectSignals()
+{
+    connect(lineAction, &QAction::triggered, [&](){
+        drawShape(SHAPE_LINE);
+    });
+
+    connect(circleAction, &QAction::triggered, [&](){
+        drawShape(SHAPE_CIRCLE);
+    });
+
+    connect(rectAction, &QAction::triggered, [&](){
+        drawShape(SHAPE_RECTANGLE);
+    });
 }
 
 MainWindow::~MainWindow()
@@ -67,10 +86,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent* event)
     {
         this->setCursor(Qt::ArrowCursor);      //范围之外变回原来形状
     }
-    if (tempPoint)
-    {
-        update();
-    }
+    update();
 }
 
 
@@ -86,14 +102,13 @@ void MainWindow::mousePressEvent(QMouseEvent *e)
 
     qDebug() << currentShape->getStatus().data();
 
-    tempPoint = currentShape->getTempPoint();
-
     if (!currentShape->isReady())
     {
         return;
     }
 
     shapeBase.push(currentShape);
+    qDebug() <<"mousePressEvent";
     currentShape = nullptr;
     update();
 }
@@ -103,21 +118,18 @@ void MainWindow::keyPressEvent(QKeyEvent *ev)
     if(ev->key() == Qt::Key_C)
     {
         drawShape(SHAPE_CIRCLE);
-        update();
         return;
     }
 
     if(ev->key() == Qt::Key_L)
     {
         drawShape(SHAPE_LINE);
-        update();
         return;
     }
 
     if(ev->key() == Qt::Key_R)
     {
         drawShape(SHAPE_RECTANGLE);
-        update();
         return;
     }
 }
@@ -144,6 +156,7 @@ void MainWindow::drawShape(ShapeEnum shapeEnum)
     {
         qDebug() << currentShape->getStatus().data();
     }
+    update();
 }
 
 
