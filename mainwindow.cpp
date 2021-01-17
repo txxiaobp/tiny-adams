@@ -23,15 +23,26 @@ MainWindow::MainWindow(QWidget *parent)
     , editMenu(mBar->addMenu("编辑"))
     , insertMenu(mBar->addMenu("插入"))
 
-    , openAction(fileMenu->addAction("开始 (S)"))
+    , newAction(fileMenu->addAction("新建"))
+    , openAction(fileMenu->addAction("打开"))
+    , closeAction(fileMenu->addAction("关闭"))
+    , saveAction(fileMenu->addAction("保存"))
+    , saveAsAction(fileMenu->addAction("另存为"))
+    , exitAction(fileMenu->addAction("退出"))
 
     , revokeAction(editMenu->addAction("撤销"))
+    , recoverAction(editMenu->addAction("恢复"))
+    , copyAction(editMenu->addAction("复制"))
+    , cutAction(editMenu->addAction("剪切"))
+    , pasteAction(editMenu->addAction("粘贴"))
+    , deleteAction(editMenu->addAction("删除"))
 
     , lineAction(insertMenu->addAction("直线 (L)"))
     , circleAction(insertMenu->addAction("圆形 (C)"))
     , rectAction(insertMenu->addAction("矩形 (R)"))
 
     , guideLabel(new QLabel())
+    , mousePosLabel(new QLabel())
 {
     this->resize(width, height);
     this->setMouseTracking(true);      //设置为不按下鼠标键触发moveEvent
@@ -41,7 +52,9 @@ MainWindow::MainWindow(QWidget *parent)
     setStatusBar(sBar);
 
     sBar->addWidget(guideLabel);
+    sBar->addWidget(mousePosLabel);
     guideLabel->setFixedSize(160, BAR_HEIGHT);
+    mousePosLabel->setFixedSize(160, BAR_HEIGHT);
 }
 
 void MainWindow::connectSignals()
@@ -96,6 +109,12 @@ void MainWindow::mouseMoveEvent(QMouseEvent* event)
         && mousePos.ry() < height)
     {
         this->setCursor(Qt::CrossCursor);
+        QString str = "X: ";
+        str += std::to_string(mousePos.rx()).data();
+        str += ", Y: ";
+        str += std::to_string(mousePos.rx()).data();
+        qDebug() << str;
+        mousePosLabel->setText(str);
     }
     else
     {

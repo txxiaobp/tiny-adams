@@ -49,6 +49,10 @@ void ShapeBase::pop()
     }
     int lastShapeId = shapeStack.back();
     shapeStack.pop_back();
+    if (shapeMap.find(lastShapeId) == shapeMap.end())
+    {
+        return;
+    }
     shapeMap.erase(lastShapeId);
 }
 

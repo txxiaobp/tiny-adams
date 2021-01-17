@@ -13,6 +13,7 @@ SOURCES += \
     line.cpp \
     main.cpp \
     mainwindow.cpp \
+    matrix.cpp \
     rectangle.cpp \
     shape_base.cpp
 
@@ -20,6 +21,7 @@ HEADERS += \
     circle.h \
     line.h \
     mainwindow.h \
+    matrix.h \
     rectangle.h \
     shape.h \
     shape_base.h

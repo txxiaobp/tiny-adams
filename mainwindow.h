@@ -50,14 +50,27 @@ private:
     QMenu *editMenu;
     QMenu *insertMenu;
 
+    QAction *newAction;
     QAction *openAction;
+    QAction *closeAction;
+    QAction *saveAction;
+    QAction *saveAsAction;
+    QAction *exitAction;
+
 
     QAction *revokeAction;
+    QAction *recoverAction;
+    QAction *copyAction;
+    QAction *cutAction;
+    QAction *pasteAction;
+    QAction *deleteAction;
+
 
     QAction *lineAction;
     QAction *circleAction;
     QAction *rectAction;
 
     QLabel *guideLabel;
+    QLabel *mousePosLabel;
 };
 #endif // MAINWINDOW_H
