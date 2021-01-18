@@ -1,12 +1,24 @@
 #include "solid.h"
+#include <cassert>
 
+int Solid::globalSolidCount = GROUND_ID;
+std::unordered_map<int, Solid*> Solid::solidMap;
 
-int Solid::globalSolidCount = 0;
-
-Solid::Solid()
+Solid::Solid(double x, double y, double angle)
     : solidId(globalSolidCount++)
+    , isFixed(false)
 {
+    Solid::solidMap.insert(std::make_pair(solidId, this));
 
+    posVec[POS_X] = x;
+    posVec[POS_Y] = y;
+    posVec[POS_ANGLE] = angle;
+}
+
+Solid::~Solid()
+{
+    assert(Solid::solidMap.find(solidId) != Solid::solidMap.end());
+    Solid::solidMap.erase(solidId);
 }
 
 int Solid::getId() const
@@ -14,26 +26,60 @@ int Solid::getId() const
     return solidId;
 }
 
-bool Solid::containPoint(Point &point)
+bool Solid::isContainPoint(Point &point)
 {
-    if (pointMap.find(point) == pointMap.end())
+    if (pointSet.find(point) == pointSet.end())
     {
         return false;
     }
     return true;
 }
 
-Point Solid::getMassCenter() const
+Vector Solid::getPosVec() const
 {
-    return massCenter;
+    return posVec;
 }
 
-double Solid::getAngle() const
+Vector Solid::getVelVec() const
 {
-    return angle;
+    return velVec;
 }
 
-double Solid::getAnglarVelocity() const
+void Solid::setPosVec(Vector posVec)
 {
-    return angle;
+    this->posVec = posVec;
+}
+
+void Solid::setVelVec(Vector velVec)
+{
+    this->velVec = velVec;
+}
+
+void Solid::addPoint(Point point)
+{
+    pointSet.insert(point);
+}
+
+int Solid::getGlobalSolidCount()
+{
+    return globalSolidCount;
+}
+
+void Solid::setFix(bool isFixed)
+{
+    this->isFixed = isFixed;
+}
+
+bool Solid::isFix() const
+{
+    return isFixed;
+}
+
+Solid* Solid::getSolidById(int id)
+{
+    if (Solid::solidMap.find(id) == Solid::solidMap.end())
+    {
+        return nullptr;
+    }
+    return Solid::solidMap[id];
 }

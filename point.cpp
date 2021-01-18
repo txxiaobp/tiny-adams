@@ -1,10 +1,11 @@
 #include "point.h"
 #include <cassert>
 
-double Point::operator[](int index) const
+Point::Point(double x, double y)
+    : Vector(2)
 {
-    assert(index >= 0 && index < row);
-    return elem[index][0];
+    elem[0][0] = x;
+    elem[1][0] = y;
 }
 
 bool Point::operator<(const Point &point) const

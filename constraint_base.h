@@ -3,22 +3,20 @@
 
 #include "constraint.h"
 #include "matrix.h"
-#include "solid_base.h"
+#include "solid.h"
 #include <vector>
 
 class ConstraintBase
 {
 public:
-    ConstraintBase(SolidBase &solidBase);
+    ConstraintBase();
 
     int getConstraintCount() const;
-
-private:
-    Matrix getTotalJacobianMatrix();
+    void insertConstraint(Constraint *constraint);
+    std::pair<Matrix, Matrix> getTotalJacobianMatrix();
 
 private:
     std::vector<Constraint*> constraintVec;
-    SolidBase &solidBase;
 };
 
 #endif // CONSTRAINTBASE_H

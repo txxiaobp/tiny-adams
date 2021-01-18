@@ -10,6 +10,10 @@ Matrix::Matrix(int row, int col)
     : row(row)
     , col(col)
 {
+    if (row <= 0 || col <= 0)
+    {
+        assert(row > 0 && col > 0);
+    }
 	assert(row > 0 && col > 0); 
     elem = new double*[row];
 

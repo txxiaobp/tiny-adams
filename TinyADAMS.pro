@@ -12,7 +12,9 @@ SOURCES += \
     circle.cpp \
     constraint.cpp \
     constraint_base.cpp \
+    ground.cpp \
     line.cpp \
+    link.cpp \
     main.cpp \
     mainwindow.cpp \
     matrix.cpp \
@@ -21,15 +23,16 @@ SOURCES += \
     revolute_pair.cpp \
     shape_base.cpp \
     solid.cpp \
-    solid_base.cpp \
     vector.cpp
 
 HEADERS += \
     circle.h \
     constraint.h \
     constraint_base.h \
+    ground.h \
     identity_matrix.h \
     line.h \
+    link.h \
     mainwindow.h \
     matrix.h \
     point.h \
@@ -38,7 +41,6 @@ HEADERS += \
     shape.h \
     shape_base.h \
     solid.h \
-    solid_base.h \
     vector.h
 
 FORMS += \

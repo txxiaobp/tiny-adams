@@ -12,8 +12,8 @@ Matrix RevolutePair::getJacobianMatrix()
 {
     int matrixRow = 2;
     int matrixCol = 6;
-    double thetaA = solidA.getAngle();
-    double thetaB = solidB.getAngle();
+    double thetaA = solidA.getPosVec()[POS_ANGLE];
+    double thetaB = solidB.getPosVec()[POS_ANGLE];
 
     Matrix jacobianMatrix(std::vector<double>{
         1.0, 0.0, -sin(thetaA) * pointA[0] - cos(thetaA) * pointA[1], -1.0,  0.0,  sin(thetaB) * pointB[0] + cos(thetaB) * pointB[1],
@@ -28,11 +28,11 @@ Matrix RevolutePair::getGamma()
     int matrixRow = 2;
     int matrixCol = 1;
 
-    double thetaA = solidA.getAngle();
-    double thetaB = solidB.getAngle();
+    double thetaA = solidA.getPosVec()[POS_ANGLE];
+    double thetaB = solidB.getPosVec()[POS_ANGLE];
 
-    double thetaAVelocity = solidA.getAnglarVelocity();
-    double thetaBVelocity = solidB.getAnglarVelocity();
+    double thetaAVelocity = solidA.getVelVec()[POS_ANGLE];
+    double thetaBVelocity = solidB.getVelVec()[POS_ANGLE];
 
     Matrix jacobianMatrix(std::vector<double>{
         (cos(thetaA) * pointA[0] - sin(thetaA) * pointA[1]) * pow(thetaAVelocity, 2)
