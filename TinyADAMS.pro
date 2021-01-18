@@ -18,6 +18,7 @@ SOURCES += \
     rectangle.cpp \
     revolute_pair.cpp \
     shape_base.cpp \
+    solid.cpp \
     vector.cpp
 
 HEADERS += \
@@ -31,6 +32,7 @@ HEADERS += \
     revolute_pair.h \
     shape.h \
     shape_base.h \
+    solid.h \
     vector.h
 
 FORMS += \
