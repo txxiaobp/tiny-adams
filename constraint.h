@@ -3,11 +3,16 @@
 
 #include "identity_matrix.h"
 #include "matrix.h"
+#include "solid.h"
 
 class Constraint
 {
 public:
-    Constraint();
+    Constraint(Solid &solidA, Solid &solidB);
+
+protected:
+    Solid &solidA;
+    Solid &solidB;
 };
 
 #endif // CONSTRAINT_H

@@ -5,6 +5,11 @@ Vector::Vector(std::vector<double> &vec)
 {
 }
 
+Vector::Vector(int vecSize)
+    : Matrix(vecSize, 1)
+{
+}
+
 
 Vector::~Vector()
 {

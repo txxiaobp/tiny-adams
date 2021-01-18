@@ -1,6 +1,8 @@
 #include "constraint.h"
 
-Constraint::Constraint()
+Constraint::Constraint(Solid &solidA, Solid &solidB)
+    : solidA(solidA)
+    , solidB(solidB)
 {
 
 }
