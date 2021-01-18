@@ -22,6 +22,7 @@ SOURCES += \
 HEADERS += \
     circle.h \
     constraint.h \
+    identity_matrix.h \
     line.h \
     mainwindow.h \
     matrix.h \

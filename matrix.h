@@ -22,7 +22,7 @@ public:
     Matrix(std::vector<double> &vector, int row, int col);
 	Matrix(const Matrix& other);
     Matrix(std::vector<double> &vector, int size); // diag matrix
-	~Matrix();
+    virtual ~Matrix();
 	
     void showMatrix();
 
@@ -42,11 +42,12 @@ public:
     void setValue(int row, int col, double value); // 赋值
 
     Matrix reverseMatrix(); // 计算逆矩阵
+    Matrix transpose(); // 计算转置矩阵
     int getDetermine(); // 计算行列式
     int getRank(); // 计算矩阵的秩
     bool isFullRank() { return getRank() == col; }
 
-private:
+protected:
     bool isNearlyZero(int row, int col);
 	int pickPivotRow(int startRow); // 获取某列上主元所在行号
     void reducedEchelon(); // 矩阵变换成行阶梯最简型
@@ -68,7 +69,7 @@ private:
     void pushHorizontalStack(const Matrix& other);
     void pushVerticalStack(const Matrix& other);
 
-private:
+protected:
     double** elem;
     int row;
     int col;
