@@ -242,6 +242,19 @@ Matrix Matrix::reverseMatrix()
     return this->operator/(diagMatrix);
 }
 
+Matrix Matrix::transpose()
+{
+    Matrix retMatrix(row, col);
+    for (int r = 0; r < row; r++)
+    {
+        for (int c = r + 1; c < col; c++)
+        {
+            std::swap(retMatrix.elem[r][c], retMatrix.elem[c][r]);
+        }
+    }
+    return retMatrix;
+}
+
 int Matrix::getDetermine()
 {
 	Matrix tempMatrix(*this);

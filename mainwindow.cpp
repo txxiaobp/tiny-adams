@@ -53,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     sBar->addWidget(guideLabel);
     sBar->addWidget(mousePosLabel);
-    guideLabel->setFixedSize(160, BAR_HEIGHT);
+    guideLabel->setFixedSize(200, BAR_HEIGHT);
     mousePosLabel->setFixedSize(160, BAR_HEIGHT);
 }
 
