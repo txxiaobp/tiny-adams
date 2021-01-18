@@ -17,7 +17,8 @@ SOURCES += \
     matrix.cpp \
     rectangle.cpp \
     revolute_pair.cpp \
-    shape_base.cpp
+    shape_base.cpp \
+    vector.cpp
 
 HEADERS += \
     circle.h \
@@ -29,7 +30,8 @@ HEADERS += \
     rectangle.h \
     revolute_pair.h \
     shape.h \
-    shape_base.h
+    shape_base.h \
+    vector.h
 
 FORMS += \
     mainwindow.ui
