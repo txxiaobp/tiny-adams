@@ -5,10 +5,10 @@
 RevolutePair::RevolutePair(Solid &solidA, Solid &solidB, Point &pointA, Point &pointB)
     : Constraint(solidA, solidB, pointA, pointB)
 {
-
+    freedomReducedCount = 2;
 }
 
-Matrix RevolutePair::getJacobian()
+Matrix RevolutePair::getJacobianMatrix()
 {
     int matrixRow = 2;
     int matrixCol = 6;

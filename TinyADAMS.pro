@@ -11,6 +11,7 @@ CONFIG += c++11
 SOURCES += \
     circle.cpp \
     constraint.cpp \
+    constraint_base.cpp \
     line.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -20,11 +21,13 @@ SOURCES += \
     revolute_pair.cpp \
     shape_base.cpp \
     solid.cpp \
+    solid_base.cpp \
     vector.cpp
 
 HEADERS += \
     circle.h \
     constraint.h \
+    constraint_base.h \
     identity_matrix.h \
     line.h \
     mainwindow.h \
@@ -35,6 +38,7 @@ HEADERS += \
     shape.h \
     shape_base.h \
     solid.h \
+    solid_base.h \
     vector.h
 
 FORMS += \

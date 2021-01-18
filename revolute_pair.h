@@ -8,8 +8,9 @@ class RevolutePair : public Constraint
 {
 public:
     RevolutePair(Solid &solidA, Solid &solidB, Point &pointA, Point &pointB);
-    Matrix getJacobian();
-    Matrix getAccelerateJacobian();
+    ~RevolutePair() {}
+    virtual Matrix getJacobianMatrix();
+    virtual Matrix getGamma();
 };
 
 #endif // REVOLUTEPAIR_H

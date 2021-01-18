@@ -7,8 +7,9 @@ class Point : public Vector
 {
 public:
     Point(int dimension = 2) : Vector(dimension) {}
-    ~Point();
+    virtual ~Point() {}
     double operator[](int index) const;
+    bool operator<(const Point &point) const;
 };
 
 #endif // POINT_H

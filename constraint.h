@@ -5,26 +5,26 @@
 #include "matrix.h"
 #include "solid.h"
 #include "point.h"
+#include <vector>
 
 class Constraint
 {
 public:
     Constraint(Solid &solidA, Solid &solidB, Point &pointA, Point &pointB);
     virtual ~Constraint() {}
-    virtual Matrix getJacobian();
-    virtual Matrix getGamma();
-    int getId();
-
+    virtual Matrix getJacobianMatrix() = 0;
+    virtual Matrix getGamma() = 0;
+    int getId() const;
+    int getFreedomReducedCount() const;
+    std::vector<int> getSolidIds() const;
 
 protected:
     Solid &solidA;
     Solid &solidB;
     Point &pointA;
     Point &pointB;
-    int id;
+    int constraintId;
+    int freedomReducedCount;
     static int globleConstraintCount;
 };
-
-int Constraint::globleConstraintCount = 0;
-
 #endif // CONSTRAINT_H
