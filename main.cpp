@@ -4,7 +4,6 @@
 #include "point.h"
 #include "link.h"
 #include "constraint.h"
-#include "constraint_base.h"
 #include "revolute_pair.h"
 #include "ground.h"
 
@@ -13,8 +12,6 @@
 
 int main(int argc, char *argv[])
 {
-    ConstraintBase constraintBase;
-
 //    Link link1(0, 1, M_PI / 2);
 //    Link link2(1, 1, -M_PI / 4);
 
@@ -38,8 +35,8 @@ int main(int argc, char *argv[])
     std::vector<double> vec{0, 1, 6};
     link1.setVelVec(Vector(vec));
 
-    constraintBase.insertConstraint(new RevolutePair(ground, link1, point1, point2));
-    auto matrixPair = constraintBase.getTotalJacobianMatrix();
+    RevolutePair revolutePair(ground, link1, point1, point2);
+    auto matrixPair = Constraint::getTotalJacobianMatrix();
     matrixPair.first.showMatrix();
     matrixPair.second.showMatrix();
 

@@ -11,7 +11,6 @@ CONFIG += c++11
 SOURCES += \
     circle.cpp \
     constraint.cpp \
-    constraint_base.cpp \
     ground.cpp \
     line.cpp \
     link.cpp \
@@ -28,7 +27,6 @@ SOURCES += \
 HEADERS += \
     circle.h \
     constraint.h \
-    constraint_base.h \
     ground.h \
     identity_matrix.h \
     line.h \
