@@ -19,7 +19,7 @@ class Matrix
 {
 public:
     Matrix(int row, int col);
-    Matrix(std::vector<double> &vector, int row, int col);
+    Matrix(std::vector<double> vector, int row, int col);
 	Matrix(const Matrix& other);
     Matrix(std::vector<double> &vector, int size); // diag matrix
     virtual ~Matrix();
@@ -47,6 +47,9 @@ public:
     int getRank(); // 计算矩阵的秩
     bool isFullRank() { return getRank() == col; }
 
+    // 扩充矩阵
+    void pushStack(const Matrix& other, Stack_Direction_E direction);
+
 protected:
     bool isNearlyZero(int row, int col);
 	int pickPivotRow(int startRow); // 获取某列上主元所在行号
@@ -64,8 +67,6 @@ protected:
     Matrix getRows(int startRow, int endRow);
     Matrix getCols(int startCol, int endCol);
 
-    // 扩充矩阵
-    void pushStack(const Matrix& other, Stack_Direction_E direction);
     void pushHorizontalStack(const Matrix& other);
     void pushVerticalStack(const Matrix& other);
 

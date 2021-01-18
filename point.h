@@ -8,6 +8,7 @@ class Point : public Vector
 public:
     Point(int dimension = 2) : Vector(dimension) {}
     ~Point();
+    double operator[](int index) const;
 };
 
 #endif // POINT_H

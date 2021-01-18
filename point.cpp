@@ -1,6 +1,8 @@
 #include "point.h"
+#include <cassert>
 
-Point::Point()
+double Point::operator[](int index) const
 {
-
+    assert(index >= 0 && index < row);
+    return elem[index][0];
 }

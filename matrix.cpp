@@ -19,7 +19,7 @@ Matrix::Matrix(int row, int col)
 	}
 }
 
-Matrix::Matrix(std::vector<double> &vector, int row, int col)
+Matrix::Matrix(std::vector<double> vector, int row, int col)
     : row(row)
     , col(col)
 {
