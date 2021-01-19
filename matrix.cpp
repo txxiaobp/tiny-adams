@@ -425,16 +425,26 @@ void Matrix::operator=(const Matrix& other)
         return;
     }
 
-    this->~Matrix();
-
-    row = other.row;
-    col = other.col;
-    elem = new double*[row];
-
-    for (int r = 0; r < row; r++)
+    if (row != other.row || col != other.col)
     {
-        elem[r] = new double[col];
-        memcpy(elem[r], other.elem[r], sizeof(double) * col);
+        this->~Matrix();
+
+        row = other.row;
+        col = other.col;
+        elem = new double*[row];
+
+        for (int r = 0; r < row; r++)
+        {
+            elem[r] = new double[col];
+            memcpy(elem[r], other.elem[r], sizeof(double) * col);
+        }
+    }
+    else
+    {
+        for (int r = 0; r < row; r++)
+        {
+            memcpy(elem[r], other.elem[r], sizeof(double) * col);
+        }
     }
 }
 
