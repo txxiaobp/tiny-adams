@@ -12,6 +12,7 @@ SOURCES += \
     circle.cpp \
     constraint.cpp \
     ground.cpp \
+    inertial_matrix.cpp \
     line.cpp \
     link.cpp \
     main.cpp \
@@ -29,6 +30,7 @@ HEADERS += \
     constraint.h \
     ground.h \
     identity_matrix.h \
+    inertial_matrix.h \
     line.h \
     link.h \
     mainwindow.h \

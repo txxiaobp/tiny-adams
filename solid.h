@@ -5,8 +5,10 @@
 #include <unordered_map>
 #include "point.h"
 #include "vector.h"
+#include "inertial_matrix.h"
 
 const int GROUND_ID = -1;
+const double INVALID_MASS = -1.0;
 
 class Solid
 {
@@ -23,6 +25,12 @@ public:
     Vector getPosVec() const;
     Vector getVelVec() const;
 
+    double getMass() const;
+    void setMass(double mass);
+
+    double getIZInertial() const;
+    void setIZInertial(double IZInertial);
+
     void addPoint(Point point);
     void setFix(bool isFixed);
     bool isFix() const;
@@ -35,6 +43,9 @@ protected:
     Vector velVec; // 速度向量
     int solidId;
     bool isFixed;
+
+    double mass;
+    InertialMatrix inertialMatrix;
 
     static int globalSolidCount;
     static std::unordered_map<int, Solid*> solidMap;

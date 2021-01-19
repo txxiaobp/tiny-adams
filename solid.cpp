@@ -7,6 +7,7 @@ std::unordered_map<int, Solid*> Solid::solidMap;
 Solid::Solid(double x, double y, double angle)
     : solidId(globalSolidCount++)
     , isFixed(false)
+    , mass(INVALID_MASS)
 {
     Solid::solidMap.insert(std::make_pair(solidId, this));
 
@@ -82,4 +83,26 @@ Solid* Solid::getSolidById(int id)
         return nullptr;
     }
     return Solid::solidMap[id];
+}
+
+double Solid::getMass() const
+{
+    assert(mass != INVALID_MASS);
+    return mass;
+}
+
+void Solid::setMass(double mass)
+{
+    assert(mass > 0);
+    this->mass = mass;
+}
+
+double Solid::getIZInertial() const
+{
+    return inertialMatrix[INERTIAL_IZZ];
+}
+
+void Solid::setIZInertial(double IZInertial)
+{
+    inertialMatrix
 }
