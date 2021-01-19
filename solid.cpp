@@ -1,5 +1,6 @@
 #include "solid.h"
 #include <cassert>
+#include <cmath>
 
 int Solid::globalSolidCount = GROUND_ID;
 std::unordered_map<int, Solid*> Solid::solidMap;
@@ -26,7 +27,7 @@ int Solid::getId() const
     return solidId;
 }
 
-bool Solid::isContainPoint(Point &point)
+bool Solid::isContainPoint(Vector &point)
 {
     if (pointSet.find(point) == pointSet.end())
     {
@@ -55,7 +56,7 @@ void Solid::setVelVec(Vector velVec)
     this->velVec = velVec;
 }
 
-void Solid::addPoint(Point point)
+void Solid::addPoint(Vector point)
 {
     pointSet.insert(point);
 }
@@ -107,4 +108,21 @@ void Solid::setInertial(double value)
 InertialMatrix Solid::getInertialMatrix() const
 {
     return inertialMatrix;
+}
+
+void Solid::addForce(Vector force, Vector point)
+{
+
+}
+
+Point Solid::toGlobalCordinate(Point &point)
+{
+    assert(isContainPoint(point));
+
+    Matrix transformMatrix(std::vector<double>{
+        cos(posVec[POS_ANGLE]), -sin(posVec[POS_ANGLE]),
+        sin(posVec[POS_ANGLE]),  cos(posVec[POS_ANGLE])
+    }, 2, 2);
+
+    return transformMatrix * point + posVec.shrink(0, 2, 0, 1);
 }

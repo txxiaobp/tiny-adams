@@ -3,12 +3,23 @@
 
 #include <set>
 #include <unordered_map>
-#include "point.h"
-#include "vector.h"
 #include "inertial_matrix.h"
 
 const int GROUND_ID = -1;
-const double INVALID_MASS = -1.0;
+
+enum
+{
+    POS_X,
+    POS_Y,
+    POS_ANGLE
+};
+
+enum
+{
+    FORCE_X,
+    FORCE_Y,
+    TORQUE_Z
+};
 
 class Solid
 {
@@ -16,7 +27,7 @@ public:
     Solid(double x = 0, double y = 0, double angle = 0);
     virtual ~Solid();
 
-    bool isContainPoint(Point &point);
+    bool isContainPoint(Vector &point);
     int getId() const;
 
     void setPosVec(Vector posVec);
@@ -33,7 +44,10 @@ public:
 
     InertialMatrix getInertialMatrix() const;
 
-    void addPoint(Point point);
+    void addForce(Vector force, Vector point);
+
+    Point toGlobalCordinate(Point &point);
+    void addPoint(Vector point);
     void setFix(bool isFixed);
     bool isFix() const;
 
@@ -47,11 +61,12 @@ protected:
     bool isFixed;
 
     InertialMatrix inertialMatrix;
+    std::vector<Vector> forceVec;
 
     static int globalSolidCount;
     static std::unordered_map<int, Solid*> solidMap;
 
-    std::set<Point> pointSet; // map of point and point id
+    std::set<Vector> pointSet; // map of point and point id
 };
 
 #endif // SOLID_H

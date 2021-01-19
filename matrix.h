@@ -6,6 +6,9 @@
 
 #define EPS 1e-10
 
+class Matrix;
+typedef Matrix Vector;
+typedef Matrix Point;
 
 typedef enum
 {
@@ -18,14 +21,17 @@ typedef enum
 class Matrix
 {
 public:
-    Matrix(int row, int col);
+    Matrix(int row = 3, int col = 1);
     Matrix(std::vector<double> vector, int row, int col);
-	Matrix(const Matrix& other);
+    Matrix(std::vector<double> vector); //vector
     Matrix(std::vector<double> &vector, int size); // diag matrix
+    Matrix(const Matrix& other);
     virtual ~Matrix();
 	
-    void showMatrix();
+    void showMatrix() const;
+    void showSize() const;
 
+    double& operator[](int posIndex);
     void operator=(const Matrix& other);
     bool operator==(const Matrix& other);
     bool operator!=(const Matrix& other);
@@ -35,12 +41,14 @@ public:
     Matrix operator/(const double scaler);
     Matrix operator+(const Matrix& other);
     Matrix operator-(const Matrix& other);
+    bool operator<(const Matrix &matrix) const;
 
     int getRow() const; //获取行数
     int getCol() const; //获取列数
     double getValue(int row, int col) const; // 获得数值
     void setValue(int row, int col, double value); // 赋值
 
+    Matrix shrink(int startRow, int endRow, int startCol, int endCol) const;
     Matrix reverseMatrix(); // 计算逆矩阵
     Matrix transpose(); // 计算转置矩阵
     int getDetermine(); // 计算行列式

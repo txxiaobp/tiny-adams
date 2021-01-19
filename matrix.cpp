@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
+#include <QDebug>
 
 
 Matrix::Matrix(int row, int col)
@@ -14,6 +15,8 @@ Matrix::Matrix(int row, int col)
     {
         assert(row > 0 && col > 0);
     }
+
+
 	assert(row > 0 && col > 0); 
     elem = new double*[row];
 
@@ -21,6 +24,20 @@ Matrix::Matrix(int row, int col)
 	{
         elem[r] = new double[col];
 	}
+}
+
+Matrix::Matrix(std::vector<double> vector)
+    : row(vector.size())
+    , col(1)
+{
+    assert(!vector.empty());
+    elem = new double*[row];
+
+    for (int r = 0; r < row; r++)
+    {
+        elem[r] = new double[col];
+        elem[r][0] = vector[r];
+    }
 }
 
 Matrix::Matrix(std::vector<double> vector, int row, int col)
@@ -248,12 +265,12 @@ Matrix Matrix::reverseMatrix()
 
 Matrix Matrix::transpose()
 {
-    Matrix retMatrix(row, col);
+    Matrix retMatrix(col, row);
     for (int r = 0; r < row; r++)
     {
-        for (int c = r + 1; c < col; c++)
+        for (int c = 0; c < col; c++)
         {
-            std::swap(retMatrix.elem[r][c], retMatrix.elem[c][r]);
+            retMatrix.elem[c][r] = elem[r][c];
         }
     }
     return retMatrix;
@@ -541,14 +558,15 @@ void Matrix::pushVerticalStack(const Matrix& other)
 
     for (int r = 0; r < row; r++)
     {
+        tmp[r] = new double[col];
         memcpy(tmp[r], elem[r], sizeof(double) * col);
     }
     for (int r = 0; r < other.row; r++)
     {
+        tmp[row + r] = new double[col];
         memcpy(tmp[row + r], other.elem[r], sizeof(double) * col);
     }
     std::swap(tmp, elem);
-
 
     for (int r = 0; r < row; r++)
     {
@@ -564,7 +582,7 @@ void Matrix::pushVerticalStack(const Matrix& other)
     row += other.row;
 }
 
-void Matrix::showMatrix()
+void Matrix::showMatrix() const
 {
     for (int i = 0; i < row; i++)
     {
@@ -576,3 +594,60 @@ void Matrix::showMatrix()
     }
 }
 
+void Matrix::showSize() const
+{
+    qDebug() << row << ", " << col;
+}
+
+Matrix Matrix::shrink(int startRow, int endRow, int startCol, int endCol) const
+{
+    assert(startRow < endRow);
+    assert(startRow >= 0 && startRow < row);
+    assert(endRow >= 0 && endRow < row);
+
+    assert(startCol < endCol);
+    assert(startCol >= 0 && startCol < col);
+    assert(endCol >= 0 && endCol < col);
+
+
+    Matrix retMatrix(endRow - startRow, endCol - startCol);
+    for (int r = startRow; r < endRow; r++)
+    {
+        for (int c = startCol; c < endCol; c++)
+        {
+            retMatrix.elem[r - startRow][c - startCol] = elem[r][c];
+        }
+    }
+    return retMatrix;
+}
+
+bool Matrix::operator<(const Matrix &matrix) const
+{
+    if (row < matrix.row)
+    {
+        return true;
+    }
+    else if (row > matrix.row)
+    {
+        return false;
+    }
+
+    for (int r = 0; r < row; r++)
+    {
+        if (elem[r][0] < matrix.elem[r][0])
+        {
+            return true;
+        }
+        else if (elem[r][0] > matrix.elem[r][0])
+        {
+            return false;
+        }
+    }
+    return false;
+}
+
+double& Matrix::operator[](int posIndex)
+{
+    assert(posIndex >= 0 && posIndex < row);
+    return elem[posIndex][0];
+}

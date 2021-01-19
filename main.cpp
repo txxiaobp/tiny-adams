@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "matrix.h"
 
-#include "point.h"
 #include "link.h"
 #include "constraint.h"
 #include "revolute_pair.h"
@@ -9,6 +8,7 @@
 
 #include <QApplication>
 #include <QDebug>
+#include <iostream>
 
 int main(int argc, char *argv[])
 {
@@ -24,7 +24,10 @@ int main(int argc, char *argv[])
     ground.setFix(true);
     double length = 2;
     double angle = M_PI / 6;
+
     Link link1(length * cos(angle), length * sin(angle), angle);
+    link1.setMass(2);
+    link1.setInertial(3);
 
     Point point1(0, 0);
     Point point2(-length, 0);
@@ -37,8 +40,27 @@ int main(int argc, char *argv[])
 
     RevolutePair revolutePair(ground, link1, point1, point2);
     auto matrixPair = Constraint::getTotalJacobianMatrix();
-    matrixPair.first.showMatrix();
-    matrixPair.second.showMatrix();
+    //matrixPair.first.showMatrix();
+    //matrixPair.second.showMatrix();
+
+    InertialMatrix matrixZ = link1.getInertialMatrix();
+    matrixZ.showMatrix();
+    std::cout << std::endl << std::endl;
+    Matrix matrixQ = matrixPair.first;
+    matrixZ.pushStack(matrixQ.transpose(), DIRECTION_HORIZONTAL);
+    matrixZ.showMatrix();
+
+    std::cout << std::endl << std::endl;
+
+    matrixQ.pushStack(Matrix(matrixQ.getRow(), matrixQ.getRow()), DIRECTION_HORIZONTAL);
+    matrixQ.showMatrix();
+
+    std::cout << std::endl << std::endl;
+
+    matrixZ.pushStack(matrixQ, DIRECTION_VERTICAL);
+    matrixZ.showMatrix();
+
+
 
     return 0;
 

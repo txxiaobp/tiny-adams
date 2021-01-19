@@ -4,7 +4,6 @@
 #include "identity_matrix.h"
 #include "matrix.h"
 #include "solid.h"
-#include "point.h"
 #include <vector>
 #include <unordered_map>
 
