@@ -28,8 +28,10 @@ public:
     double getMass() const;
     void setMass(double mass);
 
-    double getIZInertial() const;
-    void setIZInertial(double IZInertial);
+    double getInertial() const;
+    void setInertial(double value);
+
+    InertialMatrix getInertialMatrix() const;
 
     void addPoint(Point point);
     void setFix(bool isFixed);
@@ -44,7 +46,6 @@ protected:
     int solidId;
     bool isFixed;
 
-    double mass;
     InertialMatrix inertialMatrix;
 
     static int globalSolidCount;

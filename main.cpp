@@ -40,6 +40,7 @@ int main(int argc, char *argv[])
     matrixPair.first.showMatrix();
     matrixPair.second.showMatrix();
 
+    return 0;
 
 
 //    QApplication a(argc, argv);
