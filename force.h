@@ -2,18 +2,19 @@
 #define FORCE_H
 
 #include "solid.h"
+#include "point.h"
 
 class Force
 {
 public:
-    Force(Vector forceVec, Vector point, Solid& solid);
+    Force(Vector forceVec, Point point, Solid& solid);
     virtual ~Force() {}
 
-    Vector simplify(Vector& point);
+    Vector simplify(Point& point);
 
 protected:
     Vector forceVec;
-    Vector point;
+    Point point;
     Solid& solid;
 };
 

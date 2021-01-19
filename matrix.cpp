@@ -651,3 +651,9 @@ double& Matrix::operator[](int posIndex)
     assert(posIndex >= 0 && posIndex < row);
     return elem[posIndex][0];
 }
+
+double Matrix::operator[](int posIndex) const
+{
+    assert(posIndex >= 0 && posIndex < row);
+    return elem[posIndex][0];
+}

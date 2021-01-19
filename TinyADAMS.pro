@@ -19,6 +19,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     matrix.cpp \
+    point.cpp \
     rectangle.cpp \
     revolute_pair.cpp \
     shape_base.cpp \
@@ -35,6 +36,8 @@ HEADERS += \
     link.h \
     mainwindow.h \
     matrix.h \
+    point.h \
+    pub_include.h \
     rectangle.h \
     revolute_pair.h \
     shape.h \

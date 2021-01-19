@@ -5,6 +5,7 @@
 #include "constraint.h"
 #include "revolute_pair.h"
 #include "ground.h"
+#include "point.h"
 
 #include <QApplication>
 #include <QDebug>

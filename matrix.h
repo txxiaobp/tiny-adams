@@ -8,7 +8,6 @@
 
 class Matrix;
 typedef Matrix Vector;
-typedef Matrix Point;
 
 typedef enum
 {
@@ -32,6 +31,7 @@ public:
     void showSize() const;
 
     double& operator[](int posIndex);
+    double operator[](int posIndex) const;
     void operator=(const Matrix& other);
     bool operator==(const Matrix& other);
     bool operator!=(const Matrix& other);

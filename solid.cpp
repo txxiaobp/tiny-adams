@@ -27,7 +27,7 @@ int Solid::getId() const
     return solidId;
 }
 
-bool Solid::isContainPoint(Vector &point)
+bool Solid::isContainPoint(Point &point)
 {
     if (pointSet.find(point) == pointSet.end())
     {
@@ -56,7 +56,7 @@ void Solid::setVelVec(Vector velVec)
     this->velVec = velVec;
 }
 
-void Solid::addPoint(Vector point)
+void Solid::addPoint(Point point)
 {
     pointSet.insert(point);
 }
@@ -115,7 +115,7 @@ void Solid::addForce(Vector force, Vector point)
 
 }
 
-Point Solid::toGlobalCordinate(Point &point)
+Vector Solid::toGlobalCordinate(Point &point)
 {
     assert(isContainPoint(point));
 
@@ -124,5 +124,6 @@ Point Solid::toGlobalCordinate(Point &point)
         sin(posVec[POS_ANGLE]),  cos(posVec[POS_ANGLE])
     }, 2, 2);
 
-    return transformMatrix * point + posVec.shrink(0, 2, 0, 1);
+    Vector vec = point - Point(0, 0);
+    return transformMatrix * vec + posVec.shrink(0, 2, 0, 1);
 }
