@@ -1,11 +1,14 @@
 #include "dynamics_method.h"
 #include "solid.h"
+#include <cassert>
 
-DynamicsMethod::DynamicsMethod()
-    : dataReady(false)
-    , nextGlobalPosVec(Vector(3 * Solid::getGlobalSolidCount(), 1))
+DynamicsMethod::DynamicsMethod(Dynamics *dynamics)
+    : nextGlobalPosVec(Vector(3 * Solid::getGlobalSolidCount(), 1))
     , nextGlobalVelVec(Vector(3 * Solid::getGlobalSolidCount(), 1))
+    , dynamics(dynamics)
+    , dataReady(false)
 {
+    assert(nullptr != dynamics);
 }
 
 bool DynamicsMethod::isDataReady() const

@@ -1,31 +1,24 @@
 #ifndef DYNAMICS_H
 #define DYNAMICS_H
 
-#include <unordered_set>
+#include "dynamics_method.h"
 
 class Solid;
-
-typedef enum
-{
-    DYNAMICS_RUNGE_KUTTA
-}Dynamics_E;
 
 class Dynamics
 {
 public:
-    Dynamics(double timeStep, double timeDuration, Dynamics_E method = DYNAMICS_RUNGE_KUTTA);
+    Dynamics(double timeStep, double timeDuration, Dynamics_Method_E method = DYNAMICS_METHOD_RUNGE_KUTTA);
     ~Dynamics();
 
-    void addSolid(Solid &solid);
-    void addSolid(int solidId);
-
+    void setMethod(Dynamics_Method_E method);
     void calculate();
+    Vector calculateSingleStep(Vector &globalPosVec, Vector &globalVelVec);
 
 private:
-    std::unordered_set<int> solidSet;
     double timeStep;
     double timeDuration;
-    Dynamics_E method;
+    DynamicsMethod *method;
 };
 
 #endif // DYNAMICS_H

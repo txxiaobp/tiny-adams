@@ -3,10 +3,18 @@
 
 #include "matrix.h"
 
+typedef enum
+{
+    DYNAMICS_METHOD_EULER = 0,
+    DYNAMICS_METHOD_RUNGE_KUTTA
+}Dynamics_Method_E;
+
+class Dynamics;
+
 class DynamicsMethod
 {
 public:
-    DynamicsMethod();
+    DynamicsMethod(Dynamics *dynamics);
     virtual ~DynamicsMethod() {}
     virtual void calculateNextTime(const Vector &accelVec, double timeStep) = 0;
     void setNextTimeVec();
@@ -18,6 +26,7 @@ protected:
 protected:
     Vector nextGlobalPosVec;
     Vector nextGlobalVelVec;
+    Dynamics *dynamics;
 
 private:
     bool dataReady;

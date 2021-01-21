@@ -3,10 +3,12 @@
 
 #include "dynamics_method.h"
 
+class Dynamics;
+
 class EulerMethod : public DynamicsMethod
 {
 public:
-    EulerMethod();
+    EulerMethod(Dynamics *dynamics);
     virtual ~EulerMethod() {}
 
     void calculateNextTime(const Vector &accelVec, double timeStep);
