@@ -6,20 +6,52 @@
 int Constraint::globleConstraintCount = 0;
 std::unordered_map<int, Constraint*> Constraint::constraintMap;
 
-Constraint::Constraint(Solid &solidA, Solid &solidB, Point &pointA, Point &pointB)
-    : solidA(solidA)
-    , solidB(solidB)
-    , pointA(pointA)
-    , pointB(pointB)
+Constraint::Constraint(Solid &solidA, Point &pointA, Solid &solidB, Point &pointB)
+    : solidAId(solidA.getSolidId())
+    , solidBId(solidB.getSolidId())
+    , pointAId(pointA.getPointId())
+    , pointBId(pointB.getPointId())
     , constraintId(globleConstraintCount++)
 {
+    if (!solidA.isContainPoint(pointA))
+    {
+        assert(solidA.isContainPoint(pointA));
+    }
+
+
     assert(solidA.isContainPoint(pointA));
+    assert(constraintMap.find(constraintId) == constraintMap.end());
 
     if (!solidB.isContainPoint(pointB))
     {
         assert(solidB.isContainPoint(pointB));
     }
     assert(solidB.isContainPoint(pointB));
+
+    constraintMap.insert(std::make_pair(constraintId, this));
+}
+
+Constraint::Constraint(Solid &solidA, int pointAId, Solid &solidB, int pointBId)
+    : solidAId(solidA.getSolidId())
+    , solidBId(solidB.getSolidId())
+    , pointAId(pointAId)
+    , pointBId(pointBId)
+    , constraintId(globleConstraintCount++)
+{
+    if (!solidA.isContainPoint(pointAId))
+    {
+        assert(solidA.isContainPoint(pointAId));
+    }
+
+
+    assert(solidA.isContainPoint(pointAId));
+    assert(constraintMap.find(constraintId) == constraintMap.end());
+
+    if (!solidB.isContainPoint(pointBId))
+    {
+        assert(solidB.isContainPoint(pointBId));
+    }
+    assert(solidB.isContainPoint(pointBId));
 
     constraintMap.insert(std::make_pair(constraintId, this));
 }
@@ -37,7 +69,7 @@ int Constraint::getId() const
 }
 std::vector<int> Constraint::getSolidIds() const
 {
-    return std::vector<int>{solidA.getId(), solidB.getId()};
+    return std::vector<int>{solidAId, solidBId};
 }
 
 int Constraint::getFreedomReducedCount() const
@@ -95,4 +127,9 @@ std::pair<Matrix, Matrix> Constraint::getTotalJacobianMatrix()
         totalRow += constraint->getFreedomReducedCount();
     }
     return std::make_pair(totalJacobian, totalGamma);
+}
+
+int Constraint::getConstraintId() const
+{
+    return constraintId;
 }

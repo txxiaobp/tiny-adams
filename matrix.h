@@ -6,6 +6,7 @@
 
 #define EPS 1e-10
 
+class Point;
 class Matrix;
 typedef Matrix Vector;
 
@@ -21,10 +22,11 @@ class Matrix
 {
 public:
     Matrix(int row = 3, int col = 1);
-    Matrix(std::vector<double> vector, int row, int col);
-    Matrix(std::vector<double> vector); //vector
+    Matrix(std::vector<double> &vector, int row, int col);
+    Matrix(std::vector<double> &vector); //vector
     Matrix(std::vector<double> &vector, int size); // diag matrix
     Matrix(const Matrix& other);
+    Matrix(const Point &point);
     virtual ~Matrix();
 	
     void showMatrix() const;

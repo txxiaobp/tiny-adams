@@ -22,15 +22,15 @@ int main(int argc, char *argv[])
     link1.setMass(10);
     link1.setInertial(3);
 
-    Point point1(0, 0);
-    Point point2(-length, 0, &link1);
+    Point &groundOrigin = *Point::getPointById(ground.getOriginId());
+    Point point2(-length, 0, link1);
 
     link1.addPoint(point2);
 
     std::vector<double> vec{0, 0, 0};
     link1.setVelVec(Vector(vec));
 
-    RevolutePair revolutePair(ground, link1, point1, point2);
+    RevolutePair revolutePair(ground, groundOrigin, link1, point2);
     auto matrixPair = Constraint::getTotalJacobianMatrix();
 
 
@@ -45,14 +45,6 @@ int main(int argc, char *argv[])
 
     matrixZ.pushStack(matrixQ, DIRECTION_VERTICAL);
 
-
-
-    Vector force(std::vector<double>{
-        0, -link1.getMass() * 9.8, 0
-    }, 3, 1);
-
-
-    link1.addForce(force, Point(0, 0));
 
     Vector linkForce = link1.getTotalForce();
 

@@ -7,7 +7,8 @@
 class RevolutePair : public Constraint
 {
 public:
-    RevolutePair(Solid &solidA, Solid &solidB, Point &pointA, Point &pointB);
+    RevolutePair(Solid &solidA, Point &pointA, Solid &solidB, Point &pointB);
+    RevolutePair(Solid &solidA, int pointAId, Solid &solidB, int pointBId);
     ~RevolutePair() {}
     virtual Matrix getJacobianMatrix();
     virtual Matrix getGamma();

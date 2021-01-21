@@ -10,22 +10,25 @@
 class Constraint
 {
 public:
-    Constraint(Solid &solidA, Solid &solidB, Point &pointA, Point &pointB);
+    Constraint(Solid &solidA, Point &pointA, Solid &solidB, Point &pointB);
+    Constraint(Solid &solidA, int pointAId, Solid &solidB, int pointBId);
     virtual ~Constraint();
     virtual Matrix getJacobianMatrix() = 0;
     virtual Matrix getGamma() = 0;
     int getId() const;
     int getFreedomReducedCount() const;
     std::vector<int> getSolidIds() const;
+    int getConstraintId() const;
 
     static std::pair<Matrix, Matrix> getTotalJacobianMatrix();
     static int getTotalFreedomReducedCount();
 
 protected:
-    Solid &solidA;
-    Solid &solidB;
-    Point &pointA;
-    Point &pointB;
+    int solidAId;
+    int solidBId;
+    int pointAId;
+    int pointBId;
+
     int constraintId;
     int freedomReducedCount;
 

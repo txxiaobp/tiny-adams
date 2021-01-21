@@ -1,5 +1,5 @@
 #include "matrix.h"
-
+#include "point.h"
 #include <cassert>
 #include <iostream>
 #include <cmath>
@@ -22,7 +22,7 @@ Matrix::Matrix(int row, int col)
 	}
 }
 
-Matrix::Matrix(std::vector<double> vector)
+Matrix::Matrix(std::vector<double> &vector)
     : row(vector.size())
     , col(1)
 {
@@ -36,7 +36,7 @@ Matrix::Matrix(std::vector<double> vector)
     }
 }
 
-Matrix::Matrix(std::vector<double> vector, int row, int col)
+Matrix::Matrix(std::vector<double> &vector, int row, int col)
     : row(row)
     , col(col)
 {
@@ -91,6 +91,19 @@ Matrix::Matrix(std::vector<double> &vector, int size)
     {
         elem[i] = new double[col];
         elem[i][i] = vector[i];
+    }
+}
+
+Matrix::Matrix(const Point &point)
+    : row(point.getDimension())
+    , col(1)
+{
+    elem = new double*[row];
+
+    for (int i = 0; i < row; i++)
+    {
+        elem[i] = new double[col];
+        elem[i][0] = point[i];
     }
 }
 

@@ -10,11 +10,13 @@ std::unordered_map<int, Solid*> Solid::solidMap;
 
 Solid::Solid(double x, double y, double angle)
     : solidId(globalSolidCount++)
+    , isSetGravity(true)
     , isFixed(false)
-    , massCenter(0, 0, this)
+    , massCenter(0, 0, *this)  // （0,0）为质心在连体基中的坐标
 {
-    pointSet.clear();
-    pointSet.insert(massCenter);
+    assert(Solid::solidMap.find(solidId) == Solid::solidMap.end());
+
+    pointSet.insert(massCenter.getPointId());
     Solid::solidMap.insert(std::make_pair(solidId, this));
 
     posVec[POS_X] = x;
@@ -26,25 +28,25 @@ Solid::~Solid()
 {
     assert(Solid::solidMap.find(solidId) != Solid::solidMap.end());
     Solid::solidMap.erase(solidId);
-
-    for (auto *force : forceVec)
-    {
-        if (nullptr == force)
-        {
-            delete force;
-            force = nullptr;
-        }
-    }
 }
 
-int Solid::getId() const
+int Solid::getSolidId() const
 {
     return solidId;
 }
 
 bool Solid::isContainPoint(Point &point)
 {
-    if (pointSet.find(point) == pointSet.end())
+    if (pointSet.find(point.getPointId()) == pointSet.end())
+    {
+        return false;
+    }
+    return true;
+}
+
+bool Solid::isContainPoint(int pointId)
+{
+    if (pointSet.find(pointId) == pointSet.end())
     {
         return false;
     }
@@ -81,9 +83,9 @@ void Solid::setAccelVec(Vector accelVec)
     this->accelVec = accelVec;
 }
 
-void Solid::addPoint(Point point)
+void Solid::addPoint(Point &point)
 {
-    pointSet.insert(point);
+    pointSet.insert(point.getPointId());
 }
 
 int Solid::getGlobalSolidCount()
@@ -135,30 +137,49 @@ InertialMatrix Solid::getInertialMatrix() const
     return inertialMatrix;
 }
 
-void Solid::addForce(Vector force, Point point)
+void Solid::addForce(Force &force)
 {
-    forceVec.push_back(new Force(force, point, *this));
+    forceSet.insert(force.getForceId());
 }
 
 Vector Solid::toGlobalCordinate(Point &point)
 {
     assert(isContainPoint(point));
 
-    Matrix transformMatrix(std::vector<double>{
+    std::vector<double> matrixVec{
         cos(posVec[POS_ANGLE]), -sin(posVec[POS_ANGLE]),
         sin(posVec[POS_ANGLE]),  cos(posVec[POS_ANGLE])
-    }, 2, 2);
+    };
+    Matrix transformMatrix(matrixVec, 2, 2);
 
-    Vector vec = point - Point(0, 0);
+    Vector vec = point;
     return transformMatrix * vec + posVec.shrink(0, 2, 0, 1);
 }
 
 Vector Solid::getTotalForce() const
 {
     Vector retVec;
-    for (auto *force : forceVec)
+    for (int forceId : forceSet)
     {
+        Force *force = Force::getForceById(forceId);
+        assert(nullptr != force);
         retVec += force->simplify(massCenter);
     }
+
+    if (isSetGravity)
+    {
+        std::vector<double> gravityVec{0, -getMass() * GRAVITY_CONST,  0};
+        retVec += gravityVec;
+    }
     return retVec;
+}
+
+void Solid::setGravity(bool isSetGravity)
+{
+    this->isSetGravity = isSetGravity;
+}
+
+int Solid::getOriginId() const
+{
+    return massCenter.getPointId();
 }

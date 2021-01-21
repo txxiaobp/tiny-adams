@@ -3,6 +3,7 @@
 
 #include <set>
 #include <unordered_map>
+#include <unordered_set>
 #include "inertial_matrix.h"
 #include "pub_include.h"
 #include "point.h"
@@ -17,7 +18,8 @@ public:
     virtual ~Solid();
 
     bool isContainPoint(Point &point);
-    int getId() const;
+    bool isContainPoint(int pointId);
+    int getSolidId() const;
 
     void setPosVec(Vector posVec);
     void setVelVec(Vector velVec);
@@ -35,13 +37,16 @@ public:
 
     InertialMatrix getInertialMatrix() const;
 
-    void addForce(Vector force, Point point);
+    void addForce(Force &force);
     Vector getTotalForce() const;
 
+    void setGravity(bool isSetGravity);
+
     Vector toGlobalCordinate(Point &point);
-    void addPoint(Point point);
+    void addPoint(Point &point);
     void setFix(bool isFixed);
     bool isFix() const;
+    int getOriginId() const;
 
     static int getGlobalSolidCount();
     static Solid* getSolidById(int id);
@@ -50,18 +55,21 @@ protected:
     Vector posVec; // 位置向量
     Vector velVec; // 速度向量
     Vector accelVec; // 加速度向量
+
     int solidId;
+    bool isSetGravity;
     bool isFixed;
     Point massCenter;
 
     InertialMatrix inertialMatrix;
-    std::vector<Force*> forceVec;
+
+    std::unordered_set<int> constraintSet;
+    std::unordered_set<int> forceSet;
+    std::unordered_set<int> pointSet; // map of point and point id
 
 
     static int globalSolidCount;
     static std::unordered_map<int, Solid*> solidMap;
-
-    std::set<Point> pointSet; // map of point and point id
 };
 
 #endif // SOLID_H
