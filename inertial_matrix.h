@@ -8,7 +8,7 @@ const double INVALID_INERTIAL = -1.0;
 class InertialMatrix : public Matrix
 {
 public:
-    InertialMatrix();
+    InertialMatrix(int row = 3);
     ~InertialMatrix() {}
 
     bool isInertialValid() const;

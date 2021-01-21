@@ -31,19 +31,20 @@ public:
 	
     void showMatrix() const;
     void showSize() const;
+    void resize(int row, int col);
 
     double& operator[](int posIndex);
     double operator[](int posIndex) const;
     void operator=(const Matrix& other);
     bool operator==(const Matrix& other);
     bool operator!=(const Matrix& other);
-    Matrix operator*(const Matrix& other);
-    Matrix operator*(const double scaler);
-    Matrix operator/(const Matrix& other);
-    Matrix operator/(const double scaler);
-    Matrix operator+(const Matrix& other);
+    Matrix operator*(const Matrix& other) const;
+    Matrix operator*(const double scaler) const;
+    Matrix operator/(const Matrix& other) const;
+    Matrix operator/(const double scaler) const;
+    Matrix operator+(const Matrix& other) const;
     void operator+=(const Matrix& other);
-    Matrix operator-(const Matrix& other);
+    Matrix operator-(const Matrix& other) const;
     bool operator<(const Matrix &matrix) const;
 
     int getRow() const; //获取行数
@@ -51,7 +52,8 @@ public:
     double getValue(int row, int col) const; // 获得数值
     void setValue(int row, int col, double value); // 赋值
 
-    Matrix shrink(int startRow, int endRow, int startCol, int endCol) const;
+    void insert(const Matrix &matrix, int startRow, int endRow, int startCol, int endCol);
+    Matrix getSubMatrix(int startRow, int endRow, int startCol, int endCol) const;
     Matrix reverseMatrix(); // 计算逆矩阵
     Matrix transpose(); // 计算转置矩阵
     int getDetermine(); // 计算行列式

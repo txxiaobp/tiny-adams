@@ -5,7 +5,7 @@
 #include <QDebug>
 #include <iostream>
 
-int Solid::globalSolidCount = GROUND_ID;
+int Solid::globalSolidCount = 0;
 std::unordered_map<int, Solid*> Solid::solidMap;
 
 Solid::Solid(double x, double y, double angle)
@@ -63,11 +63,6 @@ Vector Solid::getVelVec() const
     return velVec;
 }
 
-Vector Solid::getAccelVec() const
-{
-    return accelVec;
-}
-
 void Solid::setPosVec(Vector &posVec)
 {
     this->posVec = posVec;
@@ -76,11 +71,6 @@ void Solid::setPosVec(Vector &posVec)
 void Solid::setVelVec(Vector &velVec)
 {
     this->velVec = velVec;
-}
-
-void Solid::setAccelVec(Vector &accelVec)
-{
-    this->accelVec = accelVec;
 }
 
 void Solid::addPoint(Point &point)
@@ -153,7 +143,7 @@ Vector Solid::toGlobalCordinate(Point &point)
     Matrix transformMatrix(matrixVec, 2, 2);
 
     Vector vec = point;
-    return transformMatrix * vec + posVec.shrink(0, 2, 0, 1);
+    return transformMatrix * vec + posVec.getSubMatrix(0, 2, 0, 1);
 }
 
 Vector Solid::getTotalForce() const
@@ -182,4 +172,82 @@ void Solid::setGravity(bool isSetGravity)
 int Solid::getOriginId() const
 {
     return massCenter.getPointId();
+}
+
+InertialMatrix Solid::getTotalInertialMatrix()
+{
+    InertialMatrix totalInertial(3 * Solid::getGlobalSolidCount());
+
+    for (int solidIndex = 0; solidIndex < Solid::getGlobalSolidCount(); solidIndex++)
+    {
+        Solid *solid = Solid::getSolidById(solidIndex);
+        assert(nullptr != solid);
+        InertialMatrix solidInertial = solid->getInertialMatrix();
+        totalInertial.insert(solidInertial, 3 * solidIndex, 3 * (solidIndex + 1), 3 * solidIndex, 3 * (solidIndex + 1));
+    }
+    return totalInertial;
+}
+
+Vector Solid::getRhsForce()
+{
+    Vector rhsForce(3 * Solid::getGlobalSolidCount());
+
+    for (int solidIndex = 0; solidIndex < Solid::getGlobalSolidCount(); solidIndex++)
+    {
+        Solid *solid = Solid::getSolidById(solidIndex);
+        assert(nullptr != solid);
+        Vector solidForce = solid->getTotalForce();
+        rhsForce.insert(solidForce, 3 * solidIndex, 3 * (solidIndex + 1), 0, 1);
+    }
+    return rhsForce;
+}
+
+void Solid::setGlobalVelVec(const Vector &globalVelVec)
+{
+    assert(3 * Solid::getGlobalSolidCount() == globalVelVec.getRow());
+    for (int solidIndex = 0; solidIndex < Solid::getGlobalSolidCount(); solidIndex++)
+    {
+        Solid *solid = Solid::getSolidById(solidIndex);
+        assert(nullptr != solid);
+        Vector solidVec = globalVelVec.getSubMatrix(3 * solidIndex, 3 * (solidIndex + 1), 0, 1);
+        solid->setVelVec(solidVec);
+    }
+}
+
+Vector Solid::getGlobalVelVec()
+{
+    Vector globalVelVec(3 * Solid::getGlobalSolidCount(), 1);
+    for (int solidIndex = 0; solidIndex < Solid::getGlobalSolidCount(); solidIndex++)
+    {
+        Solid *solid = Solid::getSolidById(solidIndex);
+        assert(nullptr != solid);
+        Vector solidVec = solid->getVelVec();
+        globalVelVec.insert(solidVec, 3 * solidIndex, 3 * (solidIndex + 1), 0, 1);
+    }
+    return globalVelVec;
+}
+
+void Solid::setGlobalPosVec(const Vector &globalPosVec)
+{
+    assert(3 * Solid::getGlobalSolidCount() == globalPosVec.getRow());
+    for (int solidIndex = 0; solidIndex < Solid::getGlobalSolidCount(); solidIndex++)
+    {
+        Solid *solid = Solid::getSolidById(solidIndex);
+        assert(nullptr != solid);
+        Vector solidVec = globalPosVec.getSubMatrix(3 * solidIndex, 3 * (solidIndex + 1), 0, 1);
+        solid->setPosVec(solidVec);
+    }
+}
+
+Vector Solid::getGlobalPosVec()
+{
+    Vector globalPosVec(3 * Solid::getGlobalSolidCount(), 1);
+    for (int solidIndex = 0; solidIndex < Solid::getGlobalSolidCount(); solidIndex++)
+    {
+        Solid *solid = Solid::getSolidById(solidIndex);
+        assert(nullptr != solid);
+        Vector solidVec = solid->getPosVec();
+        globalPosVec.insert(solidVec, 3 * solidIndex, 3 * (solidIndex + 1), 0, 1);
+    }
+    return globalPosVec;
 }

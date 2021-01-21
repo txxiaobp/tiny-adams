@@ -13,6 +13,11 @@ Matrix::Matrix(int row, int col)
     : row(row)
     , col(col)
 {
+    if (row <= 0 || col <= 0)
+    {
+        assert(row > 0 && col > 0);
+    }
+
 	assert(row > 0 && col > 0); 
     elem = new double*[row];
 
@@ -356,7 +361,7 @@ int Matrix::getRank()
 	return rank;
 }
 
-Matrix Matrix::operator+(const Matrix& other)
+Matrix Matrix::operator+(const Matrix& other) const
 {
     assert(row == other.row);
     assert(col == other.col);
@@ -389,7 +394,7 @@ void Matrix::operator+=(const Matrix& other)
     }
 }
 
-Matrix Matrix::operator-(const Matrix& other)
+Matrix Matrix::operator-(const Matrix& other) const
 {
     assert(row == other.row);
     assert(col == other.col);
@@ -408,7 +413,7 @@ Matrix Matrix::operator-(const Matrix& other)
     return retMatrix;
 }
 
-Matrix Matrix::operator*(const double scaler)
+Matrix Matrix::operator*(const double scaler) const
 {
     Matrix retMatrix(row, col);
 
@@ -424,7 +429,7 @@ Matrix Matrix::operator*(const double scaler)
 	return retMatrix;
 }
 
-Matrix Matrix::operator*(const Matrix& other)
+Matrix Matrix::operator*(const Matrix& other) const
 {
     assert(col == other.row);
 
@@ -449,7 +454,7 @@ Matrix Matrix::operator*(const Matrix& other)
 	return retMatrix;
 }
 
-Matrix Matrix::operator/(const Matrix& other)
+Matrix Matrix::operator/(const Matrix& other) const
 {
     Matrix retMatrix(*this);
     retMatrix.pushStack(other, DIRECTION_HORIZONTAL);
@@ -457,7 +462,7 @@ Matrix Matrix::operator/(const Matrix& other)
     return retMatrix.getCols(col, retMatrix.col);
 }
 
-Matrix Matrix::operator/(const double scaler)
+Matrix Matrix::operator/(const double scaler) const
 {
     assert(fabs(scaler - 0.0) > EPS);
     return this->operator*(1.0 / scaler);
@@ -465,11 +470,6 @@ Matrix Matrix::operator/(const double scaler)
 
 void Matrix::operator=(const Matrix& other)
 {
-    if (this == &other)
-    {
-        return;
-    }
-
     if (row != other.row || col != other.col)
     {
         this->~Matrix();
@@ -522,6 +522,25 @@ bool Matrix::operator==(const Matrix& other)
 	}
 
 	return true;
+}
+
+void Matrix::resize(int row, int col)
+{
+    if (row == this->row && col == this->col)
+    {
+        return;
+    }
+
+    this->~Matrix();
+
+    row = this->row;
+    col = this->col;
+    elem = new double*[row];
+
+    for (int r = 0; r < row; r++)
+    {
+        elem[r] = new double[col];
+    }
 }
 
 Matrix Matrix::getRows(int startRow, int endRow)
@@ -612,6 +631,7 @@ void Matrix::pushVerticalStack(const Matrix& other)
 
 void Matrix::showMatrix() const
 {
+    printf("\n");
     for (int i = 0; i < row; i++)
     {
         for (int j = 0; j < col; j++)
@@ -619,8 +639,9 @@ void Matrix::showMatrix() const
             printf("%15f", elem[i][j]);
 
         }
-        std::cout << std::endl;
+        printf("\n");
     }
+    printf("\n");
 }
 
 void Matrix::showSize() const
@@ -628,7 +649,7 @@ void Matrix::showSize() const
     qDebug() << row << ", " << col;
 }
 
-Matrix Matrix::shrink(int startRow, int endRow, int startCol, int endCol) const
+Matrix Matrix::getSubMatrix(int startRow, int endRow, int startCol, int endCol) const
 {
     assert(startRow < endRow);
     assert(startRow >= 0 && startRow < row);
@@ -638,15 +659,36 @@ Matrix Matrix::shrink(int startRow, int endRow, int startCol, int endCol) const
     assert(startCol >= 0 && startCol < col);
     assert(endCol >= 0 && endCol <= col);
 
-    Matrix retMatrix(endRow - startRow, endCol - startCol);
+    Matrix subMatrix(endRow - startRow, endCol - startCol);
     for (int r = startRow; r < endRow; r++)
     {
         for (int c = startCol; c < endCol; c++)
         {
-            retMatrix.elem[r - startRow][c - startCol] = elem[r][c];
+            subMatrix.elem[r - startRow][c - startCol] = elem[r][c];
         }
     }
-    return retMatrix;
+    return subMatrix;
+}
+
+void Matrix::insert(const Matrix &matrix, int startRow, int endRow, int startCol, int endCol)
+{
+    assert(startRow < endRow);
+    assert(startRow >= 0 && startRow < row);
+    assert(endRow >= 0 && endRow <= row);
+    assert(matrix.getRow() == endRow - startRow);
+
+    assert(startCol < endCol);
+    assert(startCol >= 0 && startCol < col);
+    assert(endCol >= 0 && endCol <= col);
+    assert(matrix.getCol() == endCol - startCol);
+
+    for (int r = 0; r < matrix.getRow(); r++)
+    {
+        for (int c = 0; c < matrix.getCol(); c++)
+        {
+            elem[r + startRow][c + startCol] = matrix.elem[r][c];
+        }
+    }
 }
 
 bool Matrix::operator<(const Matrix &matrix) const

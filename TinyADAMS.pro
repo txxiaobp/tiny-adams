@@ -11,7 +11,11 @@ CONFIG += c++11
 SOURCES += \
     circle.cpp \
     constraint.cpp \
+    dynamics.cpp \
+    dynamics_method.cpp \
+    euler_method.cpp \
     force.cpp \
+    ground.cpp \
     inertial_matrix.cpp \
     line.cpp \
     link.cpp \
@@ -27,7 +31,11 @@ SOURCES += \
 HEADERS += \
     circle.h \
     constraint.h \
+    dynamics.h \
+    dynamics_method.h \
+    euler_method.h \
     force.h \
+    ground.h \
     identity_matrix.h \
     inertial_matrix.h \
     line.h \

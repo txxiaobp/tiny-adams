@@ -23,11 +23,9 @@ public:
 
     void setPosVec(Vector &posVec);
     void setVelVec(Vector &velVec);
-    void setAccelVec(Vector &accelVec);
 
     Vector getPosVec() const;
     Vector getVelVec() const;
-    Vector getAccelVec() const;
 
     double getMass() const;
     void setMass(double mass);
@@ -49,12 +47,17 @@ public:
     int getOriginId() const;
 
     static int getGlobalSolidCount();
+    static InertialMatrix getTotalInertialMatrix();
+    static void setGlobalVelVec(const Vector &velVec);
+    static void setGlobalPosVec(const Vector &globalPosVec);
+    static Vector getGlobalVelVec();
+    static Vector getGlobalPosVec();
+    static Vector getRhsForce();
     static Solid* getSolidById(int id);
 
 protected:
     Vector posVec; // 位置向量
     Vector velVec; // 速度向量
-    Vector accelVec; // 加速度向量
 
     int solidId;
     bool isSetGravity;

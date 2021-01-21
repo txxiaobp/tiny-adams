@@ -5,6 +5,8 @@
 #include "constraint.h"
 #include "revolute_pair.h"
 #include "point.h"
+#include "dynamics.h"
+#include "ground.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -13,7 +15,7 @@
 
 int main(int argc, char *argv[])
 {
-    Solid ground;
+    Ground ground;
 
     double length = 2;
     double angle = 0;
@@ -32,26 +34,28 @@ int main(int argc, char *argv[])
     link1.setVelVec(linkVec);
 
     RevolutePair revolutePair(ground, groundOrigin, link1, point2);
-    auto matrixPair = Constraint::getTotalJacobianMatrix();
+    //auto matrixPair = Constraint::getTotalJacobianMatrix();
 
 
 
-    InertialMatrix matrixZ = link1.getInertialMatrix();
+//    InertialMatrix matrixZ = link1.getInertialMatrix();
 
 
-    Matrix matrixQ = matrixPair.first;
-    matrixZ.pushStack(matrixQ.transpose(), DIRECTION_HORIZONTAL);
+//    Matrix matrixQ = matrixPair.first;
+//    matrixZ.pushStack(matrixQ.transpose(), DIRECTION_HORIZONTAL);
 
-    matrixQ.pushStack(Matrix(matrixQ.getRow(), matrixQ.getRow()), DIRECTION_HORIZONTAL);
+//    matrixQ.pushStack(Matrix(matrixQ.getRow(), matrixQ.getRow()), DIRECTION_HORIZONTAL);
 
-    matrixZ.pushStack(matrixQ, DIRECTION_VERTICAL);
+//    matrixZ.pushStack(matrixQ, DIRECTION_VERTICAL);
 
 
-    Vector linkForce = link1.getTotalForce();
+//    Vector linkForce = link1.getTotalForce();
 
-    linkForce.pushStack(matrixPair.second, DIRECTION_VERTICAL);
+//    linkForce.pushStack(matrixPair.second, DIRECTION_VERTICAL);
 
-    Matrix final = matrixZ / linkForce;
+//    Matrix final = matrixZ / linkForce;
+
+
 
 //    qDebug() << "Mass Matrix";
 //    matrixZ.showMatrix();
@@ -60,8 +64,17 @@ int main(int argc, char *argv[])
 //    linkForce.showMatrix();
 
 
-    qDebug() << "Result Matrix";
-    final.showMatrix();
+//    qDebug() << "Result Matrix";
+//    final.showMatrix();
+
+    double timeStep = 0.05;
+    double timeDuration = 1;
+
+
+    Dynamics dynamics(timeStep, timeDuration);
+    //dynamics.addSolid(ground);
+    dynamics.addSolid(link1);
+    dynamics.calculate();
 
 
     return 0;

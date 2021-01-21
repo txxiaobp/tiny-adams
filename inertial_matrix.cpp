@@ -1,10 +1,13 @@
 #include "inertial_matrix.h"
 #include <cassert>
 
-InertialMatrix::InertialMatrix()
-    : Matrix(3, 3)
+InertialMatrix::InertialMatrix(int row)
+    : Matrix(row, row)
 {
-    elem[0][0] = elem[1][1] = elem[2][2] = INVALID_INERTIAL;
+    for (int r = 0; r < row; r++)
+    {
+        elem[r][r] = INVALID_INERTIAL;
+    }
 }
 
 double InertialMatrix::getMass() const
@@ -14,7 +17,6 @@ double InertialMatrix::getMass() const
 
 void InertialMatrix::setMass(double value)
 {
-    assert(value > 0);
     elem[0][0] = elem[1][1] = value;
 }
 
@@ -25,7 +27,6 @@ double InertialMatrix::getInertial() const
 
 void InertialMatrix::setInertial(double value)
 {
-    assert(value > 0);
     elem[2][2] = value;
 }
 
