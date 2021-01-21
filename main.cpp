@@ -12,32 +12,27 @@
 #include <QDebug>
 #include <iostream>
 
+Ground ground;
 
 int main(int argc, char *argv[])
 {
-    Ground ground;
-
     double length = 2;
     double angle = 0;
 
-    Link link1(length * cos(angle), length * sin(angle), angle);
-    link1.setMass(10);
-    link1.setInertial(3);
+    Link link(length * cos(angle), length * sin(angle), angle);
+    link.setMass(10);
+    link.setInertial(3);
 
-    Point &groundOrigin = *Point::getPointById(ground.getOriginId());
-    Point point2(-length, 0, link1);
+    Point *groundOrigin = Point::getPointById(ground.getOriginId());
+    Point point(-length, 0, link);
 
-    link1.addPoint(point2);
+    link.addPoint(point);
 
     std::vector<double> vec{0, 0, 0};
     Vector linkVec(vec);
-    link1.setVelVec(linkVec);
+    link.setVelVec(linkVec);
 
-    RevolutePair revolutePair(ground, groundOrigin, link1, point2);
-
-
-
-
+    RevolutePair revolutePair(ground, *groundOrigin, link, point);
 
     double timeStep = 0.05;
     double timeDuration = 1;

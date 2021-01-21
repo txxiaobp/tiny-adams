@@ -67,12 +67,6 @@ int Point::getPointId() const
 
 Point* Point::getPointById(int id)
 {
-    if (Point::pointMap.find(id) == Point::pointMap.end())
-    {
-        assert(Point::pointMap.find(id) != Point::pointMap.end());
-    }
-
-
     assert(Point::pointMap.find(id) != Point::pointMap.end());
     return pointMap[id];
 }

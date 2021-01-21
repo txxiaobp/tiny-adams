@@ -26,9 +26,7 @@ public:
 private:
     Matrix data;
     int solidId; //点依附的实体，若依附于ground，则是空间中固定不变的点
-
     int pointId;
-
     static int pointCount;
     static std::unordered_map<int, Point*> pointMap;
 };

@@ -14,6 +14,7 @@ public:
     void setMethod(Dynamics_Method_E method);
     void calculate();
     Vector calculateSingleStep(Vector &globalPosVec, Vector &globalVelVec);
+    Vector calculateSingleStep();
 
 private:
     double timeStep;
