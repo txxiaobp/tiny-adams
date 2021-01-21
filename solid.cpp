@@ -68,17 +68,17 @@ Vector Solid::getAccelVec() const
     return accelVec;
 }
 
-void Solid::setPosVec(Vector posVec)
+void Solid::setPosVec(Vector &posVec)
 {
     this->posVec = posVec;
 }
 
-void Solid::setVelVec(Vector velVec)
+void Solid::setVelVec(Vector &velVec)
 {
     this->velVec = velVec;
 }
 
-void Solid::setAccelVec(Vector accelVec)
+void Solid::setAccelVec(Vector &accelVec)
 {
     this->accelVec = accelVec;
 }

@@ -21,9 +21,9 @@ public:
     bool isContainPoint(int pointId);
     int getSolidId() const;
 
-    void setPosVec(Vector posVec);
-    void setVelVec(Vector velVec);
-    void setAccelVec(Vector accelVec);
+    void setPosVec(Vector &posVec);
+    void setVelVec(Vector &velVec);
+    void setAccelVec(Vector &accelVec);
 
     Vector getPosVec() const;
     Vector getVelVec() const;

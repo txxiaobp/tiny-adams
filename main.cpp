@@ -28,7 +28,8 @@ int main(int argc, char *argv[])
     link1.addPoint(point2);
 
     std::vector<double> vec{0, 0, 0};
-    link1.setVelVec(Vector(vec));
+    Vector linkVec(vec);
+    link1.setVelVec(linkVec);
 
     RevolutePair revolutePair(ground, groundOrigin, link1, point2);
     auto matrixPair = Constraint::getTotalJacobianMatrix();

@@ -2,7 +2,7 @@
 #define PUB_INCLUDE_H
 
 const int GROUND_ID = -1;
-const double GRAVITY_CONST = 9.8;
+const double GRAVITY_CONST = 9.80665;
 
 enum
 {

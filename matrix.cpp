@@ -65,10 +65,11 @@ Matrix::Matrix(std::vector<double> &vector, int row, int col)
 
 Matrix::Matrix(const Matrix& other)
 {
-    if (this == &other)
+    if (row != other.row || col != other.col)
     {
-
+        this->~Matrix();
     }
+
 	row = other.row;
 	col = other.col;
     elem = new double*[row];
