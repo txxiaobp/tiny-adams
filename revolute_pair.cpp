@@ -1,6 +1,7 @@
 #include "revolute_pair.h"
 #include "identity_matrix.h"
 #include <cmath>
+#include <QDebug>
 
 RevolutePair::RevolutePair(Solid &solidA, Solid &solidB, Point &pointA, Point &pointB)
     : Constraint(solidA, solidB, pointA, pointB)

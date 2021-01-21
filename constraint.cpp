@@ -14,6 +14,11 @@ Constraint::Constraint(Solid &solidA, Solid &solidB, Point &pointA, Point &point
     , constraintId(globleConstraintCount++)
 {
     assert(solidA.isContainPoint(pointA));
+
+    if (!solidB.isContainPoint(pointB))
+    {
+        assert(solidB.isContainPoint(pointB));
+    }
     assert(solidB.isContainPoint(pointB));
 
     constraintMap.insert(std::make_pair(constraintId, this));

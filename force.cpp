@@ -1,5 +1,6 @@
 #include "force.h"
 #include <cassert>
+#include "solid.h"
 
 Force::Force(Vector forceVec, Point point, Solid& solid)
     : forceVec(forceVec)
@@ -11,7 +12,7 @@ Force::Force(Vector forceVec, Point point, Solid& solid)
 }
 
 // 这里的point也是相对于solid上的连体基的位置，该点需要之前添加到solid中
-Vector Force::simplify(Point& simplyPoint)
+Vector Force::simplify(Point simplyPoint)
 {
     assert(solid.isContainPoint(simplyPoint));
 
@@ -24,6 +25,16 @@ Vector Force::simplify(Point& simplyPoint)
     retForce[TORQUE_Z] += pointDis[POS_X] * forceVec[FORCE_Y] - pointDis[POS_Y] * forceVec[FORCE_X];
 
     return retForce;
+}
+
+Vector Force::getForceVec() const
+{
+    return forceVec;
+}
+
+Point Force::getPoint() const
+{
+    return point;
 }
 
 

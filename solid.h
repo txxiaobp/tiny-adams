@@ -7,6 +7,8 @@
 #include "pub_include.h"
 #include "point.h"
 
+class Force;
+class Point;
 
 class Solid
 {
@@ -19,9 +21,11 @@ public:
 
     void setPosVec(Vector posVec);
     void setVelVec(Vector velVec);
+    void setAccelVec(Vector accelVec);
 
     Vector getPosVec() const;
     Vector getVelVec() const;
+    Vector getAccelVec() const;
 
     double getMass() const;
     void setMass(double mass);
@@ -31,7 +35,8 @@ public:
 
     InertialMatrix getInertialMatrix() const;
 
-    void addForce(Vector force, Vector point);
+    void addForce(Vector force, Point point);
+    Vector getTotalForce() const;
 
     Vector toGlobalCordinate(Point &point);
     void addPoint(Point point);
@@ -44,11 +49,14 @@ public:
 protected:
     Vector posVec; // 位置向量
     Vector velVec; // 速度向量
+    Vector accelVec; // 加速度向量
     int solidId;
     bool isFixed;
+    Point massCenter;
 
     InertialMatrix inertialMatrix;
-    std::vector<Vector> forceVec;
+    std::vector<Force*> forceVec;
+
 
     static int globalSolidCount;
     static std::unordered_map<int, Solid*> solidMap;

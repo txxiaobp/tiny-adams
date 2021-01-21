@@ -40,6 +40,7 @@ public:
     Matrix operator/(const Matrix& other);
     Matrix operator/(const double scaler);
     Matrix operator+(const Matrix& other);
+    void operator+=(const Matrix& other);
     Matrix operator-(const Matrix& other);
     bool operator<(const Matrix &matrix) const;
 

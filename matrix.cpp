@@ -6,17 +6,13 @@
 #include <cstdlib>
 #include <QDebug>
 
+#include <cstdio>
+
 
 Matrix::Matrix(int row, int col)
     : row(row)
     , col(col)
 {
-    if (row <= 0 || col <= 0)
-    {
-        assert(row > 0 && col > 0);
-    }
-
-
 	assert(row > 0 && col > 0); 
     elem = new double*[row];
 
@@ -69,6 +65,10 @@ Matrix::Matrix(std::vector<double> vector, int row, int col)
 
 Matrix::Matrix(const Matrix& other)
 {
+    if (this == &other)
+    {
+
+    }
 	row = other.row;
 	col = other.col;
     elem = new double*[row];
@@ -96,19 +96,19 @@ Matrix::Matrix(std::vector<double> &vector, int size)
 
 Matrix::~Matrix()
 {
-    if (nullptr != elem)
-	{
-		for (int i = 0; i < row; i++)
-		{
-            if (nullptr != elem[i])
-			{
-                delete elem[i];
-                elem[i] = nullptr;
-			}
-		}
-        delete elem;
-        elem = nullptr;
-	}
+//    if (nullptr != elem)
+//    {
+//        for (int i = 0; i < row; i++)
+//        {
+//            if (nullptr != elem[i])
+//            {
+//                delete  elem[i];
+//                elem[i] = nullptr;
+//            }
+//        }
+//        delete elem;
+//        elem = nullptr;
+//    }
 }
 
 /*
@@ -361,6 +361,20 @@ Matrix Matrix::operator+(const Matrix& other)
 	return retMatrix;
 }
 
+void Matrix::operator+=(const Matrix& other)
+{
+    assert(row == other.row);
+    assert(col == other.col);
+
+    for (int i = 0; i < row; i++)
+    {
+        for (int j = 0; j < col; j++)
+        {
+            elem[i][j] += other.elem[i][j];
+        }
+    }
+}
+
 Matrix Matrix::operator-(const Matrix& other)
 {
     assert(row == other.row);
@@ -588,9 +602,10 @@ void Matrix::showMatrix() const
     {
         for (int j = 0; j < col; j++)
         {
-            std::cout << elem[i][j] << "  ";
+            printf("%15f", elem[i][j]);
+
         }
-        std::cout <<std::endl;
+        std::cout << std::endl;
     }
 }
 
@@ -603,12 +618,11 @@ Matrix Matrix::shrink(int startRow, int endRow, int startCol, int endCol) const
 {
     assert(startRow < endRow);
     assert(startRow >= 0 && startRow < row);
-    assert(endRow >= 0 && endRow < row);
+    assert(endRow >= 0 && endRow <= row);
 
     assert(startCol < endCol);
     assert(startCol >= 0 && startCol < col);
-    assert(endCol >= 0 && endCol < col);
-
+    assert(endCol >= 0 && endCol <= col);
 
     Matrix retMatrix(endRow - startRow, endCol - startCol);
     for (int r = startRow; r < endRow; r++)

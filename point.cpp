@@ -1,12 +1,14 @@
 #include "point.h"
 #include <cassert>
+#include "solid.h"
 
 
-Point::Point(double x, double y)
+Point::Point(double x, double y, Solid *solid)
     : data(2, 1)
+    , solid(solid)
 {
     data[POS_X] = x;
-    data[POS_Y] = x;
+    data[POS_Y] = y;
 }
 
 double& Point::operator[](int index)

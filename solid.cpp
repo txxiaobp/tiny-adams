@@ -1,6 +1,9 @@
 #include "solid.h"
 #include <cassert>
 #include <cmath>
+#include "force.h"
+#include <QDebug>
+#include <iostream>
 
 int Solid::globalSolidCount = GROUND_ID;
 std::unordered_map<int, Solid*> Solid::solidMap;
@@ -8,7 +11,10 @@ std::unordered_map<int, Solid*> Solid::solidMap;
 Solid::Solid(double x, double y, double angle)
     : solidId(globalSolidCount++)
     , isFixed(false)
+    , massCenter(0, 0, this)
 {
+    pointSet.clear();
+    pointSet.insert(massCenter);
     Solid::solidMap.insert(std::make_pair(solidId, this));
 
     posVec[POS_X] = x;
@@ -20,6 +26,15 @@ Solid::~Solid()
 {
     assert(Solid::solidMap.find(solidId) != Solid::solidMap.end());
     Solid::solidMap.erase(solidId);
+
+    for (auto *force : forceVec)
+    {
+        if (nullptr == force)
+        {
+            delete force;
+            force = nullptr;
+        }
+    }
 }
 
 int Solid::getId() const
@@ -46,6 +61,11 @@ Vector Solid::getVelVec() const
     return velVec;
 }
 
+Vector Solid::getAccelVec() const
+{
+    return accelVec;
+}
+
 void Solid::setPosVec(Vector posVec)
 {
     this->posVec = posVec;
@@ -54,6 +74,11 @@ void Solid::setPosVec(Vector posVec)
 void Solid::setVelVec(Vector velVec)
 {
     this->velVec = velVec;
+}
+
+void Solid::setAccelVec(Vector accelVec)
+{
+    this->accelVec = accelVec;
 }
 
 void Solid::addPoint(Point point)
@@ -110,9 +135,9 @@ InertialMatrix Solid::getInertialMatrix() const
     return inertialMatrix;
 }
 
-void Solid::addForce(Vector force, Vector point)
+void Solid::addForce(Vector force, Point point)
 {
-
+    forceVec.push_back(new Force(force, point, *this));
 }
 
 Vector Solid::toGlobalCordinate(Point &point)
@@ -126,4 +151,14 @@ Vector Solid::toGlobalCordinate(Point &point)
 
     Vector vec = point - Point(0, 0);
     return transformMatrix * vec + posVec.shrink(0, 2, 0, 1);
+}
+
+Vector Solid::getTotalForce() const
+{
+    Vector retVec;
+    for (auto *force : forceVec)
+    {
+        retVec += force->simplify(massCenter);
+    }
+    return retVec;
 }
