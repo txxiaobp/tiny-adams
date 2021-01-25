@@ -25,9 +25,8 @@ public:
     Matrix(std::vector<double> &vector, int row, int col);
     Matrix(std::vector<double> &vector); //vector
     Matrix(std::vector<double> &vector, int size); // diag matrix
-    Matrix(const Matrix& other);
     Matrix(const Point &point);
-    virtual ~Matrix();
+    virtual ~Matrix() {}
 	
     void showMatrix() const;
     void showSize() const;
@@ -35,7 +34,6 @@ public:
 
     double& operator[](int posIndex);
     double operator[](int posIndex) const;
-    void operator=(const Matrix& other);
     bool operator==(const Matrix& other);
     bool operator!=(const Matrix& other);
     Matrix operator*(const Matrix& other) const;
@@ -58,7 +56,7 @@ public:
     Matrix transpose(); // 计算转置矩阵
     int getDetermine(); // 计算行列式
     int getRank(); // 计算矩阵的秩
-    bool isFullRank() { return getRank() == col; }
+    bool isFullRank() { return getRank() == getCol(); }
 
     // 扩充矩阵
     void pushStack(const Matrix& other, Stack_Direction_E direction);
@@ -84,9 +82,7 @@ protected:
     void pushVerticalStack(const Matrix& other);
 
 protected:
-    double** elem;
-    int row;
-    int col;
+    std::vector<std::vector<double>> elem;
 };
 
 #endif

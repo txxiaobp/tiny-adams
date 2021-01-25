@@ -13,19 +13,8 @@ Constraint::Constraint(Solid &solidA, Point &pointA, Solid &solidB, Point &point
     , pointBId(pointB.getPointId())
     , constraintId(globleConstraintCount++)
 {
-    if (!solidA.isContainPoint(pointA))
-    {
-        assert(solidA.isContainPoint(pointA));
-    }
-
-
     assert(solidA.isContainPoint(pointA));
     assert(constraintMap.find(constraintId) == constraintMap.end());
-
-    if (!solidB.isContainPoint(pointB))
-    {
-        assert(solidB.isContainPoint(pointB));
-    }
     assert(solidB.isContainPoint(pointB));
 
     constraintMap.insert(std::make_pair(constraintId, this));
@@ -43,14 +32,8 @@ Constraint::Constraint(Solid &solidA, int pointAId, Solid &solidB, int pointBId)
         assert(solidA.isContainPoint(pointAId));
     }
 
-
     assert(solidA.isContainPoint(pointAId));
     assert(constraintMap.find(constraintId) == constraintMap.end());
-
-    if (!solidB.isContainPoint(pointBId))
-    {
-        assert(solidB.isContainPoint(pointBId));
-    }
     assert(solidB.isContainPoint(pointBId));
 
     constraintMap.insert(std::make_pair(constraintId, this));
@@ -105,10 +88,6 @@ std::pair<Matrix, Matrix> Constraint::getTotalJacobianMatrix()
             for (int idIndex = 0; idIndex < int(solidIds.size()); idIndex++)
             {
                 Solid* solid = Solid::getSolidById(solidIds[idIndex]);
-                if (nullptr == solid)
-                {
-                    assert(nullptr != solid);
-                }
                 assert(nullptr != solid);
                 if (solid->isFix())
                 {

@@ -34,8 +34,6 @@ Matrix RevolutePair::getJacobianMatrix()
     double thetaA = solidA->getPosVec()[POS_ANGLE];
     double thetaB = solidB->getPosVec()[POS_ANGLE];
 
-    //std::cout << "pointB, x: " << (*pointB)[0] << " y: " <<(*pointB)[1] << " theta: " << thetaB << std::endl;
-
     std::vector<double> matrixVec{
         1.0, 0.0, -sin(thetaA) * (*pointA)[0] - cos(thetaA) * (*pointA)[1], -1.0,  0.0,  sin(thetaB) * (*pointB)[0] + cos(thetaB) * (*pointB)[1],
         0.0, 1.0,  cos(thetaA) * (*pointA)[0] - sin(thetaA) * (*pointA)[1],  0.0, -1.0, -cos(thetaB) * (*pointB)[0] + sin(thetaB) * (*pointB)[1],
