@@ -1,8 +1,8 @@
 #include "rectangle.h"
 #include <cassert>
 
-Rectangle::Rectangle()
-    : Shape(Qt::blue, 4, 7)
+Rectangle::Rectangle(QColor shapeColor, Qt::PenStyle shapeStyle, int shapeWidth, int shapeChosenWidth)
+    : Shape(shapeColor, shapeStyle, shapeWidth, shapeChosenWidth)
 {
 
 }
@@ -32,7 +32,7 @@ void Rectangle::draw(QPainter *qPainter)
         return;
     }
 
-    qPainter->setPen(QPen(shapeColor, shapeType));//设置画笔形式
+    setPainter(qPainter);
     qPainter->drawRect(leftUpPoint.rx(), leftUpPoint.ry(), rightDownPoint.rx() - leftUpPoint.rx(), rightDownPoint.ry() - leftUpPoint.ry());
 }
 

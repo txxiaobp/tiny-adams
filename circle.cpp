@@ -2,8 +2,8 @@
 #include <cmath>
 #include <cassert>
 
-Circle::Circle()
-    : Shape(Qt::blue, 4, 6)
+Circle::Circle(QColor shapeColor, Qt::PenStyle shapeStyle, int shapeWidth, int shapeChosenWidth)
+    : Shape(shapeColor, shapeStyle, shapeWidth, shapeChosenWidth)
     , radius(0.0)
 {
 
@@ -31,15 +31,7 @@ void Circle::draw(QPainter *qPainter)
         return;
     }
 
-    if (isChosen)
-    {
-        qPainter->setPen(QPen(shapeColor, shapeChosenType));//设置画笔形式
-    }
-    else
-    {
-        qPainter->setPen(QPen(shapeColor, shapeType));//设置画笔形式
-    }
-
+    setPainter(qPainter);
     qPainter->drawEllipse(centerPoint.rx() - radius, centerPoint.ry() - radius, 2 * radius, 2 * radius);
 }
 

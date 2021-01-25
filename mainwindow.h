@@ -27,7 +27,8 @@ public:
     void mouseMoveEvent(QMouseEvent* event);
     void keyPressEvent(QKeyEvent *event);
     void paintEvent(QPaintEvent *event);
-    void mousePressEvent(QMouseEvent *e);
+    void mousePressEvent(QMouseEvent *event);
+    void keyReleaseEvent(QKeyEvent *event);
     
     void drawShape(ShapeEnum shapeEnum);
 
@@ -42,6 +43,7 @@ private:
     ShapeBase shapeBase;
     Shape *currentShape;
     QPoint mousePos;
+    bool isCtrlPressed;
 
     QMenuBar *mBar;
     QStatusBar *sBar;

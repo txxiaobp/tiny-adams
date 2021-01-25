@@ -8,7 +8,10 @@
 class Line : public Shape
 {
 public:
-    Line();
+    Line(QColor shapeColor = DEFAULT_COLOR,
+         Qt::PenStyle shapeStyle = DEFAULT_STYLE,
+         int shapeWidth = DEFAULT_WIDTH,
+         int shapeChosenWidth = DEFAULT_CHOSEN_WIDTH);
 
     void addPoint(QPoint qPoint);
     void draw(QPainter *qPainter);

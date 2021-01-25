@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     , width(800)
     , height(600)
     , currentShape(nullptr)
+    , isCtrlPressed(false)
 
     , mBar(menuBar())
     , sBar(statusBar())
@@ -127,6 +128,17 @@ void MainWindow::mouseMoveEvent(QMouseEvent* event)
 
 void MainWindow::mousePressEvent(QMouseEvent *e)
 {
+    mousePos = e->pos();
+
+    if (isCtrlPressed)
+    {
+        Shape::chooseShape(mousePos, true);
+    }
+    else
+    {
+        Shape::chooseShape(mousePos, false);
+    }
+
     if (!currentShape)
     {
         return;
@@ -143,13 +155,17 @@ void MainWindow::mousePressEvent(QMouseEvent *e)
     }
 
     shapeBase.push(currentShape);
-    qDebug() <<"mousePressEvent";
     currentShape = nullptr;
     update();
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *ev)
 {
+    if(ev->key() == Qt::Key_Control)
+    {
+        isCtrlPressed = true;
+    }
+
     if(ev->key() == Qt::Key_C)
     {
         drawShape(SHAPE_CIRCLE);
@@ -197,5 +213,13 @@ void MainWindow::drawShape(ShapeEnum shapeEnum)
 void MainWindow::setStatusBarString(QString string)
 {
     guideLabel->setText(string);
+}
+
+void MainWindow::keyReleaseEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_Control)
+    {
+        isCtrlPressed = false;
+    }
 }
 

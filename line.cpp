@@ -1,13 +1,13 @@
 #include "line.h"
 
-Line::Line()
-    : Shape(Qt::blue, 4, 7)
+
+Line::Line(QColor shapeColor, Qt::PenStyle shapeStyle, int shapeWidth, int shapeChosenWidth)
+    : Shape(shapeColor, shapeStyle, shapeWidth, shapeChosenWidth)
     , startPoint(QPoint())
     , endPoint(QPoint())
 {
 
 }
-
 
 QString Line::getStatus()
 {
@@ -51,15 +51,7 @@ void Line::draw(QPainter *qPainter)
         return;
     }
 
-    if (isChosen)
-    {
-        qPainter->setPen(QPen(shapeColor, shapeChosenType));//设置画笔形式
-    }
-    else
-    {
-        qPainter->setPen(QPen(shapeColor, shapeType));//设置画笔形式
-    }
-
+    setPainter(qPainter);
     qPainter->drawLine(startPoint.rx(), startPoint.ry(), endPoint.rx(), endPoint.ry());
 }
 
