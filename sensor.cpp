@@ -5,7 +5,6 @@
 
 Sensor::Sensor()
 {
-
 }
 
 
@@ -15,7 +14,7 @@ void Sensor::subscribe(const Vector &vector)
 }
 
 
-void Sensor::publish()
+void Sensor::publish(const Vector &vector)
 {
     for (auto pair : publishers)
     {
