@@ -33,7 +33,7 @@ void Circle::draw(QPainter *qPainter)
 
     setPainter(qPainter);
     qPainter->drawEllipse(centerPoint.rx() - radius, centerPoint.ry() - radius, 2 * radius, 2 * radius);
-    showPoint(qPainter);
+    showPoints(qPainter);
 }
 
 QString Circle::getStatus()
@@ -74,14 +74,16 @@ void Circle::drawAuxiliary(QPainter *qPainter, QPoint &qPoint, bool extraFlag)
 
 double Circle::calDistance(QPoint &qPoint)
 {
-    double disX = qPoint.x() - centerPoint.x();
-    double disY = qPoint.y() - centerPoint.y();
-
-    double disToCenter = sqrt(disX * disX + disY * disY);
+    double disToCenter = Shape::calDistance(centerPoint, qPoint);
     return fabs(disToCenter - radius);
 }
 
 bool Circle::getReady()
 {
     return !centerPoint.isNull() && fabs(radius) > 0;
+}
+
+void Circle::capturePoint(QPoint &mousePoint)
+{
+
 }

@@ -5,9 +5,11 @@
 Line::Line(QColor shapeColor, Qt::PenStyle shapeStyle, int shapeWidth, int shapeChosenWidth)
     : Shape(shapeColor, shapeStyle, shapeWidth, shapeChosenWidth)
     , startPoint(QPoint())
+    , centerPoint(QPoint())
     , endPoint(QPoint())
 {
     pointVec.push_back(&startPoint);
+    pointVec.push_back(&centerPoint);
     pointVec.push_back(&endPoint);
 }
 
@@ -43,6 +45,8 @@ void Line::addPoint(QPoint qPoint, bool extraFlag)
     else if (endPoint.isNull())
     {
         endPoint = getEndPointWithExtraFlag(startPoint, qPoint, extraFlag);
+        centerPoint.setX((startPoint.x() + endPoint.x()) / 2);
+        centerPoint.setY((startPoint.y() + endPoint.y()) / 2);
         ready = true;
     }
 }
@@ -56,7 +60,7 @@ void Line::draw(QPainter *qPainter)
 
     setPainter(qPainter);
     qPainter->drawLine(startPoint.rx(), startPoint.ry(), endPoint.rx(), endPoint.ry());
-    showPoint(qPainter);
+    showPoints(qPainter);
 }
 
 void Line::drawAuxiliary(QPainter *qPainter, QPoint &qPoint, bool extraFlag)
@@ -133,4 +137,17 @@ QPoint Line::getEndPointWithExtraFlag(QPoint &sPoint, QPoint &ePoint, bool extra
 bool Line::getReady()
 {
     return !startPoint.isNull() && !endPoint.isNull();
+}
+
+void Line::capturePoint(QPoint &mousePoint)
+{
+    for (QPoint *point : pointVec)
+    {
+        double distanceToPoint = Shape::calDistance(*point, mousePoint);
+        if (distanceToPoint < DISTANCE_THRESHOLD)
+        {
+            currentCapturedPoint = point;
+            break;
+        }
+    }
 }

@@ -9,7 +9,7 @@
 std::unordered_map<int, Shape*> Shape::shapeMap;
 std::unordered_set<Shape*> Shape::chosenShapeSet;
 int Shape::globalShapeCount = 0;
-Shape* Shape::currentNearest = nullptr;
+Shape* Shape::currentCapturedShape = nullptr;
 
 
 Shape::Shape(QColor shapeColor, Qt::PenStyle shapeStyle, int shapeWidth, int shapeChosenWidth)
@@ -21,6 +21,7 @@ Shape::Shape(QColor shapeColor, Qt::PenStyle shapeStyle, int shapeWidth, int sha
     , shapeWidth(shapeWidth)
     , shapeChosenWidth(shapeChosenWidth)
     , shapeId(globalShapeCount++)
+    , currentCapturedPoint(nullptr)
 {
     assert(shapeMap.find(shapeId) == shapeMap.end());
     shapeMap.insert(std::make_pair(shapeId, this));
@@ -67,6 +68,7 @@ void Shape::captureNearestShape(QPoint& mousePoint)
     if (nullptr != shape)
     {
         shape->setCaptured(true);
+        shape->capturePoint(mousePoint);
     }
 }
 
@@ -85,11 +87,12 @@ void Shape::setCaptured(bool isCaptured)
     this->isCaptured = isCaptured;
     if (isCaptured)
     {
-        Shape::currentNearest = this;
+        Shape::currentCapturedShape = this;
     }
     else
     {
-        Shape::currentNearest = nullptr;
+        Shape::currentCapturedShape = nullptr;
+        currentCapturedPoint = nullptr;
     }
 }
 
@@ -109,9 +112,9 @@ void Shape::chooseShape(QPoint& mousePoint, bool isMultiple)
     }
 
     /* 如果是多选，继续添加 */
-    if (currentNearest)
+    if (currentCapturedShape)
     {
-        Shape::pushChosenSet(currentNearest);
+        Shape::pushChosenSet(currentCapturedShape);
     }
     else
     {
@@ -178,20 +181,53 @@ std::vector<Shape*> Shape::getShapes()
     return shapeVec;
 }
 
-void Shape::showPoint(QPainter *qPainter)
+void Shape::showPoint(QPoint &point, QPainter *qPainter)
 {
     const int pointRecSideLength = 4;
-    if (!getReady() || !isChosen)
+
+    setPointPainter(qPainter);
+    qPainter->drawRect(point.x() - pointRecSideLength,
+                       point.y() - pointRecSideLength,
+                       2 * pointRecSideLength,
+                       2 * pointRecSideLength);
+}
+
+void Shape::showPoints(QPainter *qPainter)
+{
+    if (!getReady())
     {
         return;
     }
 
-    for (QPoint *point : pointVec)
+    if (isChosen)
     {
-        setPointPainter(qPainter);
-        qPainter->drawRect(point->x() - pointRecSideLength,
-                           point->y() - pointRecSideLength,
-                           2 * pointRecSideLength,
-                           2 * pointRecSideLength);
+        for (QPoint *point : pointVec)
+        {
+            showPoint(*point, qPainter);
+        }
     }
+    if (currentCapturedPoint)
+    {
+        showPoint(*currentCapturedPoint, qPainter);
+    }
+}
+
+QPoint* Shape::getCapturedPoint()
+{
+    return currentCapturedPoint;
+}
+
+Shape* Shape::getCurrentCapturedShape()
+{
+    return Shape::currentCapturedShape;
+}
+
+QPoint* Shape::getCurrentCapturedPoint()
+{
+    Shape* shape = Shape::getCurrentCapturedShape();
+    if (!shape)
+    {
+        return nullptr;
+    }
+    return shape->getCapturedPoint();
 }

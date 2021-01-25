@@ -144,8 +144,17 @@ void MainWindow::mousePressEvent(QMouseEvent *e)
         return;
     }
 
-    QPoint point(e->x(), e->y());
-    currentShape->addPoint(point, isCtrlPressed);
+    Shape::captureNearestShape(mousePos);
+    QPoint *capturedPoint = Shape::getCurrentCapturedPoint();
+
+    if (capturedPoint)
+    {
+        currentShape->addPoint(*capturedPoint, isCtrlPressed);
+    }
+    else
+    {
+        currentShape->addPoint(mousePos, isCtrlPressed);
+    }
 
     setStatusBarString(currentShape->getStatus());
 

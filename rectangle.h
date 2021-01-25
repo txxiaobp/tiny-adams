@@ -15,6 +15,7 @@ public:
            int shapeChosenWidth = DEFAULT_CHOSEN_WIDTH);
     virtual ~Rectangle() {}
 
+    void capturePoint(QPoint &mousePoint);
     bool getReady();
     void addPoint(QPoint qPoint, bool extraFlag = false);
     void draw(QPainter *qPainter);

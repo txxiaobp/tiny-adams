@@ -31,6 +31,7 @@ public:
     virtual void draw(QPainter *qPainter) = 0;
     virtual double calDistance(QPoint &qPoint) = 0;
     virtual void drawAuxiliary(QPainter *qPainter, QPoint &qPoint, bool extraFlag = false) = 0;  // 绘制辅助线
+    virtual void capturePoint(QPoint &mousePoint) = 0;
 
     virtual QString getStatus() = 0;
     virtual QPoint* getTempPoint() = 0;
@@ -46,7 +47,8 @@ public:
     bool isChosenOrCaptured() const;
     int getShapeId() const;
     bool isReady() { return ready; }
-    void showPoint(QPainter *qPainter);
+    void showPoints(QPainter *qPainter);
+    QPoint* getCapturedPoint();
 
     static double calDistance(QPoint &pt1, QPoint &pt2) { return sqrt(pow(pt1.rx() - pt2.rx(), 2) + pow(pt1.ry() - pt2.ry(), 2)); }
     static Shape* getNearestShape(QPoint& mousePoint);
@@ -56,6 +58,11 @@ public:
     static void clearChosenSet();
     static void deleteShapes();
     static std::vector<Shape*> getShapes();
+    static Shape* getCurrentCapturedShape();
+    static QPoint* getCurrentCapturedPoint();
+
+private:
+    void showPoint(QPoint &point, QPainter *qPainter);
 
 protected:
     bool isChosen;
@@ -69,11 +76,12 @@ protected:
 
     std::vector<QPoint*> pointVec;
     int shapeId;
+    QPoint *currentCapturedPoint;
 
     static std::unordered_map<int, Shape*> shapeMap;
     static std::unordered_set<Shape*> chosenShapeSet;
     static int globalShapeCount;
-    static Shape *currentNearest;
+    static Shape *currentCapturedShape;
 };
 
 #endif // SHAPE_H

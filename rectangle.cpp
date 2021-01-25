@@ -37,7 +37,7 @@ void Rectangle::draw(QPainter *qPainter)
 
     setPainter(qPainter);
     qPainter->drawRect(leftUpPoint.rx(), leftUpPoint.ry(), rightDownPoint.rx() - leftUpPoint.rx(), rightDownPoint.ry() - leftUpPoint.ry());
-    showPoint(qPainter);
+    showPoints(qPainter);
 }
 
 QString Rectangle::getStatus()
@@ -82,4 +82,9 @@ double Rectangle::calDistance(QPoint &qPoint)
 bool Rectangle::getReady()
 {
     return !leftUpPoint.isNull() && !rightDownPoint.isNull();
+}
+
+void Rectangle::capturePoint(QPoint &mousePoint)
+{
+
 }

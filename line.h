@@ -14,6 +14,7 @@ public:
          int shapeChosenWidth = DEFAULT_CHOSEN_WIDTH);
     virtual ~Line() {}
 
+    void capturePoint(QPoint &mousePoint);
     bool getReady();
     void addPoint(QPoint qPoint, bool extraFlag = false);
     void draw(QPainter *qPainter);
@@ -27,6 +28,7 @@ private:
 
 private:
     QPoint startPoint;
+    QPoint centerPoint;
     QPoint endPoint;
 };
 
