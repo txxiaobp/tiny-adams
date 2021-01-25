@@ -10,7 +10,6 @@
 #include <vector>
 #include <map>
 #include "line.h"
-#include "shape_base.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -40,7 +39,6 @@ private:
     Ui::MainWindow *ui;
     int width;
     int height;
-    ShapeBase shapeBase;
     Shape *currentShape;
     QPoint mousePos;
     bool isCtrlPressed;

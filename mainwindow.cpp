@@ -72,10 +72,10 @@ void MainWindow::connectSignals()
         drawShape(SHAPE_RECTANGLE);
     });
 
-    connect(revokeAction, &QAction::triggered, [&](){
-        shapeBase.pop();
-        update();
-    });
+//    connect(revokeAction, &QAction::triggered, [&](){
+//        shapeBase.pop();
+//        update();
+//    });
 }
 
 MainWindow::~MainWindow()
@@ -88,7 +88,7 @@ void MainWindow::paintEvent(QPaintEvent *)
     QPainter qPainter(this);
     qPainter.setRenderHint(QPainter::HighQualityAntialiasing);
 
-    std::vector<Shape*> shapes = shapeBase.getShapes();
+    std::vector<Shape*> shapes = Shape::getShapes();
     for (auto shape : shapes)
     {
         shape->draw(&qPainter);
@@ -154,7 +154,6 @@ void MainWindow::mousePressEvent(QMouseEvent *e)
         return;
     }
 
-    shapeBase.push(currentShape);
     currentShape = nullptr;
     update();
 }
@@ -181,6 +180,13 @@ void MainWindow::keyPressEvent(QKeyEvent *ev)
     if(ev->key() == Qt::Key_R)
     {
         drawShape(SHAPE_RECTANGLE);
+        return;
+    }
+
+    if(ev->key() == Qt::Key_D)
+    {
+        Shape::deleteShapes();
+        update();
         return;
     }
 }

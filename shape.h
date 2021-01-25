@@ -26,6 +26,7 @@ class Shape
 public:
     Shape(QColor shapeColor, Qt::PenStyle shapeStyle, int shapeWidth, int shapeChosenWidth);
     virtual ~Shape();
+
     virtual void addPoint(QPoint qPoint) = 0;
     virtual void draw(QPainter *qPainter) = 0;
     virtual double calDistance(QPoint &qPoint) = 0;
@@ -50,6 +51,8 @@ public:
     static void chooseShape(QPoint& mousePoint, bool isMultiple = false);   // isMultiple: 多选
     static void pushChosenSet(Shape *shape);
     static void clearChosenSet();
+    static void deleteShapes();
+    static std::vector<Shape*> getShapes();
 
 protected:
     bool isChosen;

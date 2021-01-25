@@ -150,3 +150,23 @@ void Shape::setPainter(QPainter *qPainter)
         qPainter->setPen(pen);//设置画笔形式
     }
 }
+
+void Shape::deleteShapes()
+{
+    for (Shape *shape : Shape::chosenShapeSet)
+    {
+        delete shape;
+        shape = nullptr;
+    }
+    Shape::chosenShapeSet.clear();
+}
+
+std::vector<Shape*> Shape::getShapes()
+{
+    std::vector<Shape*> shapeVec;
+    for (auto shapeMapPair : shapeMap)
+    {
+        shapeVec.push_back(shapeMapPair.second);
+    }
+    return shapeVec;
+}
