@@ -12,6 +12,8 @@ const QColor DEFAULT_COLOR = Qt::black;
 const Qt::PenStyle DEFAULT_STYLE = Qt::SolidLine;
 const int DEFAULT_WIDTH = 4;
 const int DEFAULT_CHOSEN_WIDTH = 7;
+const double EPS = 1e-8;
+
 
 enum
 {

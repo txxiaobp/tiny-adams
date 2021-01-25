@@ -3,9 +3,6 @@
 
 #include <vector>
 
-
-#define EPS 1e-10
-
 class Point;
 class Matrix;
 typedef Matrix Vector;

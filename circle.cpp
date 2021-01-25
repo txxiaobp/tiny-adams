@@ -10,7 +10,7 @@ Circle::Circle(QColor shapeColor, Qt::PenStyle shapeStyle, int shapeWidth, int s
 }
 
 
-void Circle::addPoint(QPoint qPoint)
+void Circle::addPoint(QPoint qPoint, bool extraFlag)
 {
     if (centerPoint.isNull())
     {
@@ -57,8 +57,9 @@ QPoint* Circle::getTempPoint()
     return nullptr;
 }
 
-void Circle::drawAuxiliary(QPainter *qPainter, QPoint &qPoint)
+void Circle::drawAuxiliary(QPainter *qPainter, QPoint &qPoint, bool extraFlag)
 {
+    extraFlag = false;
     QPoint *tempPoint = getTempPoint();
 
     if (tempPoint && !qPoint.isNull())

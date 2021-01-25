@@ -8,7 +8,7 @@ Rectangle::Rectangle(QColor shapeColor, Qt::PenStyle shapeStyle, int shapeWidth,
 }
 
 
-void Rectangle::addPoint(QPoint qPoint)
+void Rectangle::addPoint(QPoint qPoint, bool extraFlag)
 {
     if (leftUpPoint.isNull())
     {
@@ -58,8 +58,9 @@ QPoint* Rectangle::getTempPoint()
     return nullptr;
 }
 
-void Rectangle::drawAuxiliary(QPainter *qPainter, QPoint &qPoint)
+void Rectangle::drawAuxiliary(QPainter *qPainter, QPoint &qPoint, bool extraFlag)
 {
+    extraFlag = false;
     QPoint *tempPoint = getTempPoint();
 
     if (tempPoint && !qPoint.isNull())

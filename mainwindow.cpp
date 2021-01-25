@@ -95,7 +95,7 @@ void MainWindow::paintEvent(QPaintEvent *)
     }
     if (currentShape)
     {
-        currentShape->drawAuxiliary(&qPainter, mousePos);
+        currentShape->drawAuxiliary(&qPainter, mousePos, isCtrlPressed);
     }
 }
 
@@ -145,7 +145,7 @@ void MainWindow::mousePressEvent(QMouseEvent *e)
     }
 
     QPoint point(e->x(), e->y());
-    currentShape->addPoint(point);
+    currentShape->addPoint(point, isCtrlPressed);
 
     setStatusBarString(currentShape->getStatus());
 
@@ -163,6 +163,7 @@ void MainWindow::keyPressEvent(QKeyEvent *ev)
     if(ev->key() == Qt::Key_Control)
     {
         isCtrlPressed = true;
+        update();
     }
 
     if(ev->key() == Qt::Key_C)
@@ -226,6 +227,7 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
     if(event->key() == Qt::Key_Control)
     {
         isCtrlPressed = false;
+        update();
     }
 }
 

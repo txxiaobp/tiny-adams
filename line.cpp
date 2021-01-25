@@ -1,4 +1,5 @@
 #include "line.h"
+#include <QDebug>
 
 
 Line::Line(QColor shapeColor, Qt::PenStyle shapeStyle, int shapeWidth, int shapeChosenWidth)
@@ -31,7 +32,7 @@ QPoint* Line::getTempPoint()
     return nullptr;
 }
 
-void Line::addPoint(QPoint qPoint)
+void Line::addPoint(QPoint qPoint, bool extraFlag)
 {
     if (startPoint.isNull())
     {
@@ -39,7 +40,7 @@ void Line::addPoint(QPoint qPoint)
     }
     else if (endPoint.isNull())
     {
-        endPoint = qPoint;
+        endPoint = getEndPointWithExtraFlag(startPoint, qPoint, extraFlag);
         ready = true;
     }
 }
@@ -55,15 +56,17 @@ void Line::draw(QPainter *qPainter)
     qPainter->drawLine(startPoint.rx(), startPoint.ry(), endPoint.rx(), endPoint.ry());
 }
 
-void Line::drawAuxiliary(QPainter *qPainter, QPoint &qPoint)
+void Line::drawAuxiliary(QPainter *qPainter, QPoint &qPoint, bool extraFlag)
 {
-    QPoint *tempPoint = getTempPoint();
-
-    if (tempPoint && !qPoint.isNull())
+    QPoint *sPoint = getTempPoint();  // temporary start point
+    if (nullptr == sPoint || qPoint.isNull())
     {
-        qPainter->setPen(QPen(Qt::blue, 1));//设置画笔形式
-        qPainter->drawLine(tempPoint->rx(), tempPoint->ry(), qPoint.rx(), qPoint.ry());
+        return;
     }
+    QPoint ePoint = getEndPointWithExtraFlag(*sPoint, qPoint, extraFlag);
+
+    qPainter->setPen(QPen(Qt::blue, 1));//设置画笔形式
+    qPainter->drawLine(sPoint->rx(), sPoint->ry(), ePoint.x(), ePoint.y());
 }
 
 double Line::calDistance(QPoint &qPoint)
@@ -77,10 +80,48 @@ double Line::calDistance(QPoint &qPoint)
     double x0 = qPoint.x();
     double y0 = qPoint.y();
 
+    if (fabs(x1 - x2) < EPS)  // vertical
+    {
+        return fabs(x1 - x0);
+    }
+    else if (fabs(y1 - y2) < EPS)  // horizontal
+    {
+        return fabs(y1 - y0);
+    }
+    else
+    {
+        double A = 1.0 / (x2 - x1);
+        double B = 1.0 / (y1 - y2);
+        double C = y1 / (y2 - y1) + x1 / (x1 - x2);
 
-    double A = 1.0 / (x2 - x1);
-    double B = 1.0 / (y1 - y2);
-    double C = y1 / (y2 - y1) + x1 / (x1 - x2);
+        return fabs(A * x0 + B * y0 + C) / sqrt(A * A + B * B);
+    }
+}
 
-    return fabs(A * x0 + B * y0 + C) / sqrt(A * A + B * B);
+QPoint Line::getEndPointWithExtraFlag(QPoint &sPoint, QPoint &ePoint, bool extraFlag)
+{
+    if (!extraFlag)
+    {
+        return ePoint;
+    }
+
+    double ePointX = ePoint.x();
+    double ePointY = ePoint.y();
+
+    if (extraFlag)
+    {
+        double vecX = ePointX - sPoint.x();
+        double vecY = ePointY - sPoint.y();
+
+        if (fabs(vecX) <= fabs(vecY))  // x nearer
+        {
+            ePointX = sPoint.x();
+        }
+        else
+        {
+            ePointY = sPoint.y();
+        }
+    }
+
+    return QPoint(ePointX, ePointY);
 }

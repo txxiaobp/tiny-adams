@@ -15,10 +15,10 @@ public:
            int shapeChosenWidth = DEFAULT_CHOSEN_WIDTH);
     virtual ~Rectangle() {}
 
-    void addPoint(QPoint qPoint);
+    void addPoint(QPoint qPoint, bool extraFlag = false);
     void draw(QPainter *qPainter);
     double calDistance(QPoint &qPoint);
-    void drawAuxiliary(QPainter *qPainter, QPoint &qPoint);
+    void drawAuxiliary(QPainter *qPainter, QPoint &qPoint, bool extraFlag = false);
     QString getStatus();
 
 private:

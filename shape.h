@@ -27,10 +27,10 @@ public:
     Shape(QColor shapeColor, Qt::PenStyle shapeStyle, int shapeWidth, int shapeChosenWidth);
     virtual ~Shape();
 
-    virtual void addPoint(QPoint qPoint) = 0;
+    virtual void addPoint(QPoint qPoint, bool extraFlag = false) = 0;
     virtual void draw(QPainter *qPainter) = 0;
     virtual double calDistance(QPoint &qPoint) = 0;
-    virtual void drawAuxiliary(QPainter *qPainter, QPoint &qPoint) = 0;  // 绘制辅助线
+    virtual void drawAuxiliary(QPainter *qPainter, QPoint &qPoint, bool extraFlag = false) = 0;  // 绘制辅助线
 
     virtual QString getStatus() = 0;
     virtual QPoint* getTempPoint() = 0;
