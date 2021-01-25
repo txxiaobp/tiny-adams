@@ -2,7 +2,7 @@
 #include <cassert>
 
 Rectangle::Rectangle()
-    : Shape(Qt::blue, 4)
+    : Shape(Qt::blue, 4, 7)
 {
 
 }
@@ -67,4 +67,9 @@ void Rectangle::drawAuxiliary(QPainter *qPainter, QPoint &qPoint)
         qPainter->setPen(QPen(Qt::blue, 1));//设置画笔形式
         qPainter->drawRect(leftUpPoint.rx(), leftUpPoint.ry(), qPoint.rx() - leftUpPoint.rx(), qPoint.ry() - leftUpPoint.ry());
     }
+}
+
+double Rectangle::calDistance(QPoint &qPoint)
+{
+    return 0;
 }

@@ -26,6 +26,7 @@ SOURCES += \
     rectangle.cpp \
     revolute_pair.cpp \
     runge_kutta.cpp \
+    shape.cpp \
     shape_base.cpp \
     solid.cpp
 

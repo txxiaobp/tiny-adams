@@ -16,36 +16,39 @@ Ground ground;
 
 int main(int argc, char *argv[])
 {
-    double length = 2;
-    double angle = 0;
 
-    Link link(length * cos(angle), length * sin(angle), angle);
-    link.setMass(10);
-    link.setInertial(3);
+//    double length = 2;
+//    double angle = 0;
 
-    Point *groundOrigin = Point::getPointById(ground.getOriginId());
-    Point point(-length, 0, link);
+//    Link link(length * cos(angle), length * sin(angle), angle);
+//    link.setMass(10);
+//    link.setInertial(3);
 
-    link.addPoint(point);
+//    Point *groundOrigin = Point::getPointById(ground.getOriginId());
+//    Point point(-length, 0, link);
 
-    std::vector<double> vec{0, 0, 0};
-    Vector linkVec(vec);
-    link.setVelVec(linkVec);
+//    link.addPoint(point);
 
-    RevolutePair revolutePair(ground, *groundOrigin, link, point);
+//    std::vector<double> vec{0, 0, 0};
+//    Vector linkVec(vec);
+//    link.setVelVec(linkVec);
 
-    double timeStep = 0.05;
-    double timeDuration = 1;
+//    RevolutePair revolutePair(ground, *groundOrigin, link, point);
 
-    Dynamics dynamics(timeStep, timeDuration);
-    dynamics.calculate();
+//    double timeStep = 0.05;
+//    double timeDuration = 1;
 
-
-    return 0;
+//    Dynamics dynamics(timeStep, timeDuration);
+//    dynamics.calculate();
 
 
-//    QApplication a(argc, argv);
-//    MainWindow w;
-//    w.show();
-//    return a.exec();
+//    return 0;
+
+
+    QApplication a(argc, argv);
+    MainWindow w;
+    w.show();
+    return a.exec();
+
+
 }

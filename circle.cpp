@@ -3,7 +3,7 @@
 #include <cassert>
 
 Circle::Circle()
-    : Shape(Qt::blue, 4)
+    : Shape(Qt::blue, 4, 6)
     , radius(0.0)
 {
 
@@ -31,7 +31,15 @@ void Circle::draw(QPainter *qPainter)
         return;
     }
 
-    qPainter->setPen(QPen(shapeColor, shapeType));//设置画笔形式
+    if (isChosen)
+    {
+        qPainter->setPen(QPen(shapeColor, shapeChosenType));//设置画笔形式
+    }
+    else
+    {
+        qPainter->setPen(QPen(shapeColor, shapeType));//设置画笔形式
+    }
+
     qPainter->drawEllipse(centerPoint.rx() - radius, centerPoint.ry() - radius, 2 * radius, 2 * radius);
 }
 
@@ -68,4 +76,13 @@ void Circle::drawAuxiliary(QPainter *qPainter, QPoint &qPoint)
         double tmpRadius = Shape::calDistance(centerPoint, qPoint);
         qPainter->drawEllipse(centerPoint.rx() - tmpRadius, centerPoint.ry() - tmpRadius, 2 * tmpRadius, 2 * tmpRadius);
     }
+}
+
+double Circle::calDistance(QPoint &qPoint)
+{
+    double disX = qPoint.x() - centerPoint.x();
+    double disY = qPoint.y() - centerPoint.y();
+
+    double disToCenter = sqrt(disX * disX + disY * disY);
+    return fabs(disToCenter - radius);
 }

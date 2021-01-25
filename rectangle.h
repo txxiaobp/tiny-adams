@@ -13,6 +13,7 @@ public:
 
     void addPoint(QPoint qPoint);
     void draw(QPainter *qPainter);
+    double calDistance(QPoint &qPoint);
     void drawAuxiliary(QPainter *qPainter, QPoint &qPoint);
     QString getStatus();
 

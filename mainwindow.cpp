@@ -102,6 +102,8 @@ void MainWindow::mouseMoveEvent(QMouseEvent* event)
 {
     mousePos = event->pos();
 
+    Shape::captureNearestShape(mousePos);
+
     //在坐标（0 ~ width，0 ~ height）范围内改变鼠标形状
     if(mousePos.rx() > 0
         && mousePos.rx() < width
