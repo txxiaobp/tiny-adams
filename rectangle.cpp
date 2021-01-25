@@ -3,8 +3,11 @@
 
 Rectangle::Rectangle(QColor shapeColor, Qt::PenStyle shapeStyle, int shapeWidth, int shapeChosenWidth)
     : Shape(shapeColor, shapeStyle, shapeWidth, shapeChosenWidth)
+    , leftUpPoint(QPoint())
+    , rightDownPoint(QPoint())
 {
-
+    pointVec.push_back(&leftUpPoint);
+    pointVec.push_back(&rightDownPoint);
 }
 
 
@@ -27,13 +30,14 @@ void Rectangle::addPoint(QPoint qPoint, bool extraFlag)
 
 void Rectangle::draw(QPainter *qPainter)
 {
-    if (leftUpPoint.isNull() || rightDownPoint.isNull())
+    if (!getReady())
     {
         return;
     }
 
     setPainter(qPainter);
     qPainter->drawRect(leftUpPoint.rx(), leftUpPoint.ry(), rightDownPoint.rx() - leftUpPoint.rx(), rightDownPoint.ry() - leftUpPoint.ry());
+    showPoint(qPainter);
 }
 
 QString Rectangle::getStatus()
@@ -51,7 +55,7 @@ QString Rectangle::getStatus()
 
 QPoint* Rectangle::getTempPoint()
 {
-    if (!leftUpPoint.isNull() && rightDownPoint.isNull())
+    if (getReady())
     {
         return &leftUpPoint;
     }
@@ -73,4 +77,9 @@ void Rectangle::drawAuxiliary(QPainter *qPainter, QPoint &qPoint, bool extraFlag
 double Rectangle::calDistance(QPoint &qPoint)
 {
     return 0;
+}
+
+bool Rectangle::getReady()
+{
+    return !leftUpPoint.isNull() && !rightDownPoint.isNull();
 }

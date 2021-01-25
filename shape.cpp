@@ -151,6 +151,13 @@ void Shape::setPainter(QPainter *qPainter)
     }
 }
 
+void Shape::setPointPainter(QPainter *qPainter)
+{
+    QPen pen(Qt::red, 2);
+    pen.setStyle(Qt::SolidLine);
+    qPainter->setPen(pen);//设置画笔形式
+}
+
 void Shape::deleteShapes()
 {
     for (Shape *shape : Shape::chosenShapeSet)
@@ -169,4 +176,22 @@ std::vector<Shape*> Shape::getShapes()
         shapeVec.push_back(shapeMapPair.second);
     }
     return shapeVec;
+}
+
+void Shape::showPoint(QPainter *qPainter)
+{
+    const int pointRecSideLength = 4;
+    if (!getReady() || !isChosen)
+    {
+        return;
+    }
+
+    for (QPoint *point : pointVec)
+    {
+        setPointPainter(qPainter);
+        qPainter->drawRect(point->x() - pointRecSideLength,
+                           point->y() - pointRecSideLength,
+                           2 * pointRecSideLength,
+                           2 * pointRecSideLength);
+    }
 }

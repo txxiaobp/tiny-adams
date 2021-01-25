@@ -34,16 +34,19 @@ public:
 
     virtual QString getStatus() = 0;
     virtual QPoint* getTempPoint() = 0;
+    virtual bool getReady() = 0;
 
     void setColor(QColor shapeColor);
     void setType(); // 线性
     void setWidth(); // 线宽
     void setPainter(QPainter *qPainter);
+    void setPointPainter(QPainter *qPainter);
     void setChosen(bool isChosen);
     void setCaptured(bool isCaptured);
     bool isChosenOrCaptured() const;
     int getShapeId() const;
     bool isReady() { return ready; }
+    void showPoint(QPainter *qPainter);
 
     static double calDistance(QPoint &pt1, QPoint &pt2) { return sqrt(pow(pt1.rx() - pt2.rx(), 2) + pow(pt1.ry() - pt2.ry(), 2)); }
     static Shape* getNearestShape(QPoint& mousePoint);
@@ -64,6 +67,7 @@ protected:
     int shapeWidth;
     int shapeChosenWidth;
 
+    std::vector<QPoint*> pointVec;
     int shapeId;
 
     static std::unordered_map<int, Shape*> shapeMap;

@@ -6,7 +6,7 @@ Circle::Circle(QColor shapeColor, Qt::PenStyle shapeStyle, int shapeWidth, int s
     : Shape(shapeColor, shapeStyle, shapeWidth, shapeChosenWidth)
     , radius(0.0)
 {
-
+    pointVec.push_back(&centerPoint);
 }
 
 
@@ -33,6 +33,7 @@ void Circle::draw(QPainter *qPainter)
 
     setPainter(qPainter);
     qPainter->drawEllipse(centerPoint.rx() - radius, centerPoint.ry() - radius, 2 * radius, 2 * radius);
+    showPoint(qPainter);
 }
 
 QString Circle::getStatus()
@@ -78,4 +79,9 @@ double Circle::calDistance(QPoint &qPoint)
 
     double disToCenter = sqrt(disX * disX + disY * disY);
     return fabs(disToCenter - radius);
+}
+
+bool Circle::getReady()
+{
+    return !centerPoint.isNull() && fabs(radius) > 0;
 }

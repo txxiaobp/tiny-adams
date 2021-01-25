@@ -15,6 +15,7 @@ public:
            int shapeChosenWidth = DEFAULT_CHOSEN_WIDTH);
     virtual ~Circle() {}
 
+    bool getReady();
     void addPoint(QPoint qPoint, bool extraFlag = false);
     void draw(QPainter *qPainter);
     double calDistance(QPoint &qPoint);

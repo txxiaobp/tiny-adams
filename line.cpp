@@ -7,7 +7,8 @@ Line::Line(QColor shapeColor, Qt::PenStyle shapeStyle, int shapeWidth, int shape
     , startPoint(QPoint())
     , endPoint(QPoint())
 {
-
+    pointVec.push_back(&startPoint);
+    pointVec.push_back(&endPoint);
 }
 
 QString Line::getStatus()
@@ -32,6 +33,7 @@ QPoint* Line::getTempPoint()
     return nullptr;
 }
 
+/* extraFlag为附加标识，对于直线来说，当extraFlag为true时，所画的直线是水平或垂直的 */
 void Line::addPoint(QPoint qPoint, bool extraFlag)
 {
     if (startPoint.isNull())
@@ -47,18 +49,20 @@ void Line::addPoint(QPoint qPoint, bool extraFlag)
 
 void Line::draw(QPainter *qPainter)
 {
-    if (startPoint.isNull() || endPoint.isNull())
+    if (!getReady())
     {
         return;
     }
 
     setPainter(qPainter);
     qPainter->drawLine(startPoint.rx(), startPoint.ry(), endPoint.rx(), endPoint.ry());
+    showPoint(qPainter);
 }
 
 void Line::drawAuxiliary(QPainter *qPainter, QPoint &qPoint, bool extraFlag)
 {
     QPoint *sPoint = getTempPoint();  // temporary start point
+
     if (nullptr == sPoint || qPoint.isNull())
     {
         return;
@@ -124,4 +128,9 @@ QPoint Line::getEndPointWithExtraFlag(QPoint &sPoint, QPoint &ePoint, bool extra
     }
 
     return QPoint(ePointX, ePointY);
+}
+
+bool Line::getReady()
+{
+    return !startPoint.isNull() && !endPoint.isNull();
 }
