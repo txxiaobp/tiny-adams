@@ -26,6 +26,7 @@ SOURCES += \
     rectangle.cpp \
     revolute_pair.cpp \
     runge_kutta.cpp \
+    sensor.cpp \
     shape.cpp \
     solid.cpp
 
@@ -48,6 +49,7 @@ HEADERS += \
     rectangle.h \
     revolute_pair.h \
     runge_kutta.h \
+    sensor.h \
     shape.h \
     solid.h
 
