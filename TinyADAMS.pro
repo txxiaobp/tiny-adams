@@ -11,6 +11,7 @@ CONFIG += c++11
 SOURCES += \
     circle.cpp \
     constraint.cpp \
+    controller.cpp \
     dynamics.cpp \
     dynamics_method.cpp \
     euler_method.cpp \
@@ -22,6 +23,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     matrix.cpp \
+    pid.cpp \
     point.cpp \
     rectangle.cpp \
     revolute_pair.cpp \
@@ -33,6 +35,7 @@ SOURCES += \
 HEADERS += \
     circle.h \
     constraint.h \
+    controller.h \
     dynamics.h \
     dynamics_method.h \
     euler_method.h \
@@ -44,6 +47,7 @@ HEADERS += \
     link.h \
     mainwindow.h \
     matrix.h \
+    pid.h \
     point.h \
     pub_include.h \
     rectangle.h \
