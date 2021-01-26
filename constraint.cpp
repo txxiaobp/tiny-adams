@@ -5,6 +5,7 @@
 
 int Constraint::globleConstraintCount = 0;
 std::unordered_map<int, Constraint*> Constraint::constraintMap;
+ConstraintSet Constraint::constraintSet;
 
 Constraint::Constraint(Solid &solidA, Point &pointA, Solid &solidB, Point &pointB)
     : solidAId(solidA.getSolidId())
@@ -36,6 +37,17 @@ Constraint::Constraint(Solid &solidA, int pointAId, Solid &solidB, int pointBId)
     assert(constraintMap.find(constraintId) == constraintMap.end());
     assert(solidB.isContainPoint(pointBId));
 
+    constraintMap.insert(std::make_pair(constraintId, this));
+}
+
+Constraint::Constraint()
+    : solidAId(INVALID_ID)
+    , solidBId(INVALID_ID)
+    , pointAId(INVALID_ID)
+    , pointBId(INVALID_ID)
+    , constraintId(globleConstraintCount++)
+{
+    assert(constraintMap.find(constraintId) == constraintMap.end());
     constraintMap.insert(std::make_pair(constraintId, this));
 }
 
@@ -111,4 +123,66 @@ std::pair<Matrix, Matrix> Constraint::getTotalJacobianMatrix()
 int Constraint::getConstraintId() const
 {
     return constraintId;
+}
+
+void Constraint::setSolidA(Solid &solidA)
+{
+    if (pointAId != INVALID_ID)
+    {
+        assert(solidA.isContainPoint(pointAId));
+    }
+    solidAId = solidA.getSolidId();
+}
+
+void Constraint::setSolidB(Solid &solidB)
+{
+    if (pointBId != INVALID_ID)
+    {
+        assert(solidB.isContainPoint(pointBId));
+    }
+    solidBId = solidB.getSolidId();
+}
+
+void Constraint::setPointA(Point &pointA)
+{
+    if (solidAId != INVALID_ID)
+    {
+        assert(Solid::getSolidById(solidAId)->isContainPoint(pointA.getPointId()));
+    }
+    pointAId = pointA.getPointId();
+}
+
+void Constraint::setPointB(Point &pointB)
+{
+    if (solidBId != INVALID_ID)
+    {
+        assert(Solid::getSolidById(solidBId)->isContainPoint(pointB.getPointId()));
+    }
+    pointBId = pointB.getPointId();
+}
+
+void Constraint::storeConstraint(Constraint* constraint)
+{
+    Constraint::constraintSet.restoreConstraint(constraint);
+}
+
+ConstraintSet::ConstraintSet()
+{
+    constraintVec.clear();
+}
+
+ConstraintSet::~ConstraintSet()
+{
+    for (Constraint* &constraint : constraintVec)
+    {
+        delete constraint;
+        constraint = nullptr;
+    }
+    constraintVec.clear();
+}
+
+void ConstraintSet::restoreConstraint(Constraint *constraint)
+{
+    assert(nullptr != constraint);
+    constraintVec.push_back(constraint);
 }

@@ -3,7 +3,8 @@
 
 #include <QColor>
 
-const int GROUND_ID = -1;
+const int INVALID_ID = -1;
+const int GROUND_ID = 0;
 const double GRAVITY_CONST = 9.80665;
 const int MATRIX_SINGULAR = -1;
 const double DISTANCE_THRESHOLD = 10;

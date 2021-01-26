@@ -7,11 +7,33 @@
 #include <vector>
 #include <unordered_map>
 
+
+typedef enum
+{
+    REVOLUTE_PAIR
+}Constraint_E;
+
+
+class Constraint;
+
+
+class ConstraintSet
+{
+public:
+    ConstraintSet();
+    ~ConstraintSet();
+    void restoreConstraint(Constraint *constraint);
+
+private:
+    std::vector<Constraint*> constraintVec;
+};
+
 class Constraint
 {
 public:
     Constraint(Solid &solidA, Point &pointA, Solid &solidB, Point &pointB);
     Constraint(Solid &solidA, int pointAId, Solid &solidB, int pointBId);
+    Constraint();
     virtual ~Constraint();
     virtual Matrix getJacobianMatrix() = 0;
     virtual Matrix getGamma() = 0;
@@ -20,8 +42,14 @@ public:
     std::vector<int> getSolidIds() const;
     int getConstraintId() const;
 
+    void setSolidA(Solid &solidA);
+    void setSolidB(Solid &solidB);
+    void setPointA(Point &pointA);
+    void setPointB(Point &pointB);
+
     static std::pair<Matrix, Matrix> getTotalJacobianMatrix();
     static int getTotalFreedomReducedCount();
+    static void storeConstraint(Constraint* constraint);
 
 protected:
     int solidAId;
@@ -34,5 +62,7 @@ protected:
 
     static int globleConstraintCount;
     static std::unordered_map<int, Constraint*> constraintMap;
+
+    static ConstraintSet constraintSet;
 };
 #endif // CONSTRAINT_H

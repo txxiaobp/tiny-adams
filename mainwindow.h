@@ -49,6 +49,7 @@ private:
     QMenu *fileMenu;
     QMenu *editMenu;
     QMenu *insertMenu;
+    QMenu *constraintMenu;
 
     QAction *newAction;
     QAction *openAction;
@@ -69,6 +70,8 @@ private:
     QAction *lineAction;
     QAction *circleAction;
     QAction *rectAction;
+
+    QAction *revoluteAction;
 
     QLabel *guideLabel;
     QLabel *mousePosLabel;

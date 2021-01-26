@@ -16,6 +16,12 @@ RevolutePair::RevolutePair(Solid &solidA, int pointAId, Solid &solidB, int point
     freedomReducedCount = 2;
 }
 
+RevolutePair::RevolutePair()
+    : Constraint()
+{
+    freedomReducedCount = 2;
+}
+
 Matrix RevolutePair::getJacobianMatrix()
 {
     int matrixRow = 2;
@@ -74,4 +80,11 @@ Matrix RevolutePair::getGamma()
     Matrix jacobianMatrix(matrixVec, matrixRow, matrixCol);
 
     return jacobianMatrix;
+}
+
+RevolutePair* RevolutePair::createRevolute()
+{
+    RevolutePair* revolutePair = new RevolutePair();
+    Constraint::storeConstraint(revolutePair);
+    return revolutePair;
 }

@@ -6,6 +6,7 @@
 #include "line.h"
 #include "circle.h"
 #include "rectangle.h"
+#include "revolute_pair.h"
 
 const int BAR_HEIGHT = 20;
 
@@ -23,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
     , fileMenu(mBar->addMenu("文件"))
     , editMenu(mBar->addMenu("编辑"))
     , insertMenu(mBar->addMenu("插入"))
+    , constraintMenu(mBar->addMenu("约束"))
 
     , newAction(fileMenu->addAction("新建"))
     , openAction(fileMenu->addAction("打开"))
@@ -41,6 +43,8 @@ MainWindow::MainWindow(QWidget *parent)
     , lineAction(insertMenu->addAction("直线 (L)"))
     , circleAction(insertMenu->addAction("圆形 (C)"))
     , rectAction(insertMenu->addAction("矩形 (R)"))
+
+    , revoluteAction(constraintMenu->addAction("转动副"))
 
     , guideLabel(new QLabel())
     , mousePosLabel(new QLabel())
@@ -70,6 +74,13 @@ void MainWindow::connectSignals()
 
     connect(rectAction, &QAction::triggered, [&](){
         drawShape(SHAPE_RECTANGLE);
+    });
+
+    connect(revoluteAction, &QAction::triggered, [&](){
+        RevolutePair* revolutePair = RevolutePair::createRevolute();
+
+
+
     });
 
 //    connect(revokeAction, &QAction::triggered, [&](){
