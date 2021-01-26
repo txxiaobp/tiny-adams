@@ -27,14 +27,14 @@ Matrix::Matrix(std::vector<double> &vector)
 }
 
 Matrix::Matrix(std::vector<double> &vector, int row, int col)
-    : elem(std::vector<std::vector<double>>(vector.size(), std::vector<double>(1, 0)))
+    : elem(std::vector<std::vector<double>>(row, std::vector<double>(col, 0)))
 {
     assert(row > 0 && col > 0);
     assert(row * col <= int(vector.size()));
 
     int vecIndex = 0;
 
-    for (decltype (vector.size()) r = 0; r < vector.size(); r++)
+    for (int r = 0; r < row; r++)
     {
         for (int c = 0; c < col; c++)
         {
@@ -335,6 +335,17 @@ void Matrix::operator+=(const Matrix& other)
     }
 }
 
+void Matrix::operator*=(const double scaler)
+{
+    for (int i = 0; i < getRow(); i++)
+    {
+        for (int j = 0; j < getCol(); j++)
+        {
+            elem[i][j] *= scaler;
+        }
+    }
+}
+
 Matrix Matrix::operator-(const Matrix& other) const
 {
     assert(getRow() == other.getRow());
@@ -372,6 +383,12 @@ Matrix Matrix::operator*(const double scaler) const
 
 Matrix Matrix::operator*(const Matrix& other) const
 {
+    if (getCol() != other.getRow())
+    {
+        assert(getCol() == other.getRow());
+    }
+
+
     assert(getCol() == other.getRow());
 
     int retRow = getRow();

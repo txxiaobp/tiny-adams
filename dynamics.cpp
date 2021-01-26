@@ -1,7 +1,6 @@
 #include "dynamics.h"
 #include "solid.h"
 #include "constraint.h"
-#include "ground.h"
 #include "euler_method.h"
 #include "runge_kutta.h"
 #include <cassert>

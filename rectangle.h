@@ -16,8 +16,8 @@ public:
     virtual ~Rectangle() {}
 
     void capturePoint(QPoint &mousePoint);
-    bool getReady();
-    void addPoint(QPoint qPoint, bool extraFlag = false);
+    bool isReady();
+    void clickPoint(QPoint qPoint, bool extraFlag = false);
     void draw(QPainter *qPainter);
     double calDistance(QPoint &qPoint);
     void drawAuxiliary(QPainter *qPainter, QPoint &qPoint, bool extraFlag = false);

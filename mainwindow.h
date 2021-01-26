@@ -29,7 +29,7 @@ public:
     void mousePressEvent(QMouseEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
     
-    void drawShape(ShapeEnum shapeEnum);
+    void createObject(Object_E objectEnum);
 
 private:
     void connectSignals();
@@ -39,7 +39,7 @@ private:
     Ui::MainWindow *ui;
     int width;
     int height;
-    Shape *currentShape;
+    Object *currentObject;
     QPoint mousePos;
     bool isCtrlPressed;
 
@@ -50,6 +50,7 @@ private:
     QMenu *editMenu;
     QMenu *insertMenu;
     QMenu *constraintMenu;
+    QMenu *solidMenu;
 
     QAction *newAction;
     QAction *openAction;
@@ -72,6 +73,8 @@ private:
     QAction *rectAction;
 
     QAction *revoluteAction;
+
+    QAction *linkAction;
 
     QLabel *guideLabel;
     QLabel *mousePosLabel;

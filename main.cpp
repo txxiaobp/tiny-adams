@@ -6,13 +6,13 @@
 #include "revolute_pair.h"
 #include "point.h"
 #include "dynamics.h"
-#include "ground.h"
+
 
 #include <QApplication>
 #include <QDebug>
 #include <iostream>
 
-Ground ground;
+Link ground;
 
 int main(int argc, char *argv[])
 {

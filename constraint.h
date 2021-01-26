@@ -4,6 +4,7 @@
 #include "identity_matrix.h"
 #include "matrix.h"
 #include "solid.h"
+#include "object.h"
 #include <vector>
 #include <unordered_map>
 
@@ -28,13 +29,15 @@ private:
     std::vector<Constraint*> constraintVec;
 };
 
-class Constraint
+class Constraint : public Object
 {
 public:
     Constraint(Solid &solidA, Point &pointA, Solid &solidB, Point &pointB);
     Constraint(Solid &solidA, int pointAId, Solid &solidB, int pointBId);
     Constraint();
     virtual ~Constraint();
+
+    virtual QString getStatus() = 0;
     virtual Matrix getJacobianMatrix() = 0;
     virtual Matrix getGamma() = 0;
     int getId() const;
@@ -42,6 +45,7 @@ public:
     std::vector<int> getSolidIds() const;
     int getConstraintId() const;
 
+    bool isReady() const;
     void setSolidA(Solid &solidA);
     void setSolidB(Solid &solidB);
     void setPointA(Point &pointA);

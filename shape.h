@@ -2,6 +2,8 @@
 #define SHAPE_H
 
 #include "pub_include.h"
+#include "object.h"
+#include "matrix.h"
 #include <QObject>
 #include <QPainter>
 #include <QPen>
@@ -11,32 +13,19 @@
 #include <unordered_set>
 #include <QColor>
 
-typedef enum
-{
-    SHAPE_NONE = -1,
-    SHAPE_LINE = 0,
-    SHAPE_CIRCLE,
-    SHAPE_RECTANGLE,
 
-    SHAPE_MAX,
-}ShapeEnum;
-
-class Shape
+class Shape : public Object
 {
 public:
+    Shape(int solidId, QColor shapeColor, Qt::PenStyle shapeStyle, int shapeWidth, int shapeChosenWidth);
     Shape(QColor shapeColor, Qt::PenStyle shapeStyle, int shapeWidth, int shapeChosenWidth);
     virtual ~Shape();
 
-    virtual void addPoint(QPoint qPoint, bool extraFlag = false) = 0;
-    virtual void draw(QPainter *qPainter) = 0;
     virtual double calDistance(QPoint &qPoint) = 0;
-    virtual void drawAuxiliary(QPainter *qPainter, QPoint &qPoint, bool extraFlag = false) = 0;  // 绘制辅助线
     virtual void capturePoint(QPoint &mousePoint) = 0;
-
-    virtual QString getStatus() = 0;
     virtual QPoint* getTempPoint() = 0;
-    virtual bool getReady() = 0;
 
+    void setSolid(const int solidId);
     void setColor(QColor shapeColor);
     void setType(); // 线性
     void setWidth(); // 线宽
@@ -45,6 +34,7 @@ public:
     void setChosen(bool isChosen);
     void setCaptured(bool isCaptured);
     bool isChosenOrCaptured() const;
+    int getSolidId() const;
     int getShapeId() const;
     bool isReady() { return ready; }
     void showPoints(QPainter *qPainter);
@@ -61,6 +51,10 @@ public:
     static Shape* getCurrentCapturedShape();
     static QPoint* getCurrentCapturedPoint();
 
+    static Vector getUnitVec(QPoint &startPoint, QPoint &endPoint);
+    static Vector getPerpendicularVec(QPoint &startPoint, QPoint &endPoint);
+    static Matrix getRotateMatrix(double theta);
+
 private:
     void showPoint(QPoint &point, QPainter *qPainter);
 
@@ -76,6 +70,7 @@ protected:
 
     std::vector<QPoint*> pointVec;
     int shapeId;
+    int solidId;
     QPoint *currentCapturedPoint;
 
     static std::unordered_map<int, Shape*> shapeMap;

@@ -1,4 +1,5 @@
 #include "shape.h"
+#include "solid.h"
 #include "pub_include.h"
 #include <cassert>
 #include <QDebug>
@@ -11,6 +12,21 @@ std::unordered_set<Shape*> Shape::chosenShapeSet;
 int Shape::globalShapeCount = 0;
 Shape* Shape::currentCapturedShape = nullptr;
 
+Shape::Shape(int solidId, QColor shapeColor, Qt::PenStyle shapeStyle, int shapeWidth, int shapeChosenWidth)
+    : isChosen(false)
+    , isCaptured(false)
+    , ready(false)
+    , shapeColor(shapeColor)
+    , shapeStyle(shapeStyle)
+    , shapeWidth(shapeWidth)
+    , shapeChosenWidth(shapeChosenWidth)
+    , shapeId(globalShapeCount++)
+    , solidId(solidId)
+    , currentCapturedPoint(nullptr)
+{
+    assert(shapeMap.find(shapeId) == shapeMap.end());
+    shapeMap.insert(std::make_pair(shapeId, this));
+}
 
 Shape::Shape(QColor shapeColor, Qt::PenStyle shapeStyle, int shapeWidth, int shapeChosenWidth)
     : isChosen(false)
@@ -21,20 +37,22 @@ Shape::Shape(QColor shapeColor, Qt::PenStyle shapeStyle, int shapeWidth, int sha
     , shapeWidth(shapeWidth)
     , shapeChosenWidth(shapeChosenWidth)
     , shapeId(globalShapeCount++)
+    , solidId(INVALID_ID)
     , currentCapturedPoint(nullptr)
 {
-    assert(shapeMap.find(shapeId) == shapeMap.end());
-    shapeMap.insert(std::make_pair(shapeId, this));
+    assert(Shape::shapeMap.find(shapeId) == Shape::shapeMap.end());
+    Shape::shapeMap.insert(std::make_pair(shapeId, this));
 }
 
 Shape::~Shape()
 {
-    assert(shapeMap.find(shapeId) != shapeMap.end());
-    shapeMap.erase(shapeId);
-    if (Shape::chosenShapeSet.find(this) != Shape::chosenShapeSet.end())
-    {
-        Shape::chosenShapeSet.erase(this);
-    }
+    assert(Shape::shapeMap.find(shapeId) != Shape::shapeMap.end());
+    Shape::shapeMap.erase(shapeId);
+
+//    if (Shape::chosenShapeSet.find(this) != Shape::chosenShapeSet.end())
+//    {
+//        Shape::chosenShapeSet.erase(this);
+//    }
 }
 
 
@@ -101,6 +119,11 @@ bool Shape::isChosenOrCaptured() const
     return isChosen || isCaptured;
 }
 
+int Shape::getSolidId() const
+{
+    return solidId;
+}
+
 void Shape::chooseShape(QPoint& mousePoint, bool isMultiple)
 {
     Shape::captureNearestShape(mousePoint);
@@ -114,7 +137,15 @@ void Shape::chooseShape(QPoint& mousePoint, bool isMultiple)
     /* 如果是多选，继续添加 */
     if (currentCapturedShape)
     {
-        Shape::pushChosenSet(currentCapturedShape);
+        Solid *solid = Solid::getSolidById(currentCapturedShape->getSolidId());
+        if (nullptr != solid)
+        {
+            solid->setChosen(true);
+        }
+        else
+        {
+            Shape::pushChosenSet(currentCapturedShape);
+        }
     }
     else
     {
@@ -165,8 +196,11 @@ void Shape::deleteShapes()
 {
     for (Shape *shape : Shape::chosenShapeSet)
     {
-        delete shape;
-        shape = nullptr;
+        if (nullptr != shape)
+        {
+            delete shape;
+            shape = nullptr;
+        }
     }
     Shape::chosenShapeSet.clear();
 }
@@ -194,7 +228,7 @@ void Shape::showPoint(QPoint &point, QPainter *qPainter)
 
 void Shape::showPoints(QPainter *qPainter)
 {
-    if (!getReady())
+    if (!isReady())
     {
         return;
     }
@@ -230,4 +264,35 @@ QPoint* Shape::getCurrentCapturedPoint()
         return nullptr;
     }
     return shape->getCapturedPoint();
+}
+
+Vector Shape::getUnitVec(QPoint &startPoint, QPoint &endPoint)
+{
+    Vector retVec(2, 1);
+    double length = Shape::calDistance(startPoint, endPoint);
+    retVec[0] = (endPoint.x() - startPoint.x()) / length;
+    retVec[1] = (endPoint.y() - startPoint.y()) / length;
+
+    return retVec;
+}
+
+Vector Shape::getPerpendicularVec(QPoint &startPoint, QPoint &endPoint)
+{
+    Matrix rotateMatrix = Shape::getRotateMatrix(M_PI / 2);
+    Vector unitVec = Shape::getUnitVec(startPoint, endPoint);
+    return rotateMatrix * unitVec;
+}
+
+Matrix Shape::getRotateMatrix(double theta)
+{
+    std::vector<double> vec{
+        cos(theta), -sin(theta),
+        sin(theta),  cos(theta)
+    };
+    return Matrix(vec, 2, 2);
+}
+
+void Shape::setSolid(const int solidId)
+{
+    this->solidId = solidId;
 }

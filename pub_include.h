@@ -14,7 +14,18 @@ const Qt::PenStyle DEFAULT_STYLE = Qt::SolidLine;
 const int DEFAULT_WIDTH = 4;
 const int DEFAULT_CHOSEN_WIDTH = 7;
 const double EPS = 1e-8;
+const double CIRCLE_MARGIN_RATIO = 0.1;  // 圆中心线超出圆周的长度占半径的比例
 
+typedef enum
+{
+    SHAPE_LINE = 0,
+    SHAPE_CIRCLE,
+    SHAPE_RECTANGLE,
+
+    SOLID_LINK,
+
+    OBJECT_MAX,
+}Object_E;
 
 enum
 {

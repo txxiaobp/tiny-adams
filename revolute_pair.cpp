@@ -82,6 +82,45 @@ Matrix RevolutePair::getGamma()
     return jacobianMatrix;
 }
 
+QString RevolutePair::getStatus()
+{
+    if (solidAId == INVALID_ID)
+    {
+        return QString("请选择物体1");
+    }
+    if (solidBId == INVALID_ID)
+    {
+        return QString("请选择物体2");
+    }
+    if (pointAId == INVALID_ID)
+    {
+        return QString("请选择物体1上的点");
+    }
+    if (pointBId == INVALID_ID)
+    {
+        return QString("请选择物体2上的点");
+    }
+
+    assert(isReady());
+    return QString("已就绪");
+}
+
+/* extraFlag为附加标识，对于直线来说，当extraFlag为true时，所画的直线是水平或垂直的 */
+void RevolutePair::clickPoint(QPoint qPoint, bool extraFlag)
+{
+//    if (startPoint.isNull())
+//    {
+//        startPoint = qPoint;
+//    }
+//    else if (endPoint.isNull())
+//    {
+//        endPoint = getEndPointWithExtraFlag(startPoint, qPoint, extraFlag);
+//        centerPoint.setX((startPoint.x() + endPoint.x()) / 2);
+//        centerPoint.setY((startPoint.y() + endPoint.y()) / 2);
+//        ready = true;
+//    }
+}
+
 RevolutePair* RevolutePair::createRevolute()
 {
     RevolutePair* revolutePair = new RevolutePair();

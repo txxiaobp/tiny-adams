@@ -161,6 +161,14 @@ void Constraint::setPointB(Point &pointB)
     pointBId = pointB.getPointId();
 }
 
+bool Constraint::isReady() const
+{
+    return solidAId != INVALID_ID &&
+           solidBId != INVALID_ID &&
+           pointAId != INVALID_ID &&
+           pointBId != INVALID_ID;
+}
+
 void Constraint::storeConstraint(Constraint* constraint)
 {
     Constraint::constraintSet.restoreConstraint(constraint);

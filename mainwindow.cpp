@@ -4,6 +4,7 @@
 #include <QDebug>
 
 #include "line.h"
+#include "link.h"
 #include "circle.h"
 #include "rectangle.h"
 #include "revolute_pair.h"
@@ -16,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
     , width(800)
     , height(600)
-    , currentShape(nullptr)
+    , currentObject(nullptr)
     , isCtrlPressed(false)
 
     , mBar(menuBar())
@@ -25,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
     , editMenu(mBar->addMenu("编辑"))
     , insertMenu(mBar->addMenu("插入"))
     , constraintMenu(mBar->addMenu("约束"))
+    , solidMenu(mBar->addMenu("实体"))
 
     , newAction(fileMenu->addAction("新建"))
     , openAction(fileMenu->addAction("打开"))
@@ -46,6 +48,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     , revoluteAction(constraintMenu->addAction("转动副"))
 
+    , linkAction(solidMenu->addAction("连杆"))
+
     , guideLabel(new QLabel())
     , mousePosLabel(new QLabel())
 {
@@ -65,23 +69,29 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::connectSignals()
 {
     connect(lineAction, &QAction::triggered, [&](){
-        drawShape(SHAPE_LINE);
+        createObject(SHAPE_LINE);
     });
 
     connect(circleAction, &QAction::triggered, [&](){
-        drawShape(SHAPE_CIRCLE);
+        createObject(SHAPE_CIRCLE);
     });
 
     connect(rectAction, &QAction::triggered, [&](){
-        drawShape(SHAPE_RECTANGLE);
+        createObject(SHAPE_RECTANGLE);
     });
 
     connect(revoluteAction, &QAction::triggered, [&](){
         RevolutePair* revolutePair = RevolutePair::createRevolute();
 
-
-
     });
+
+    connect(linkAction, &QAction::triggered, [&](){
+        createObject(SOLID_LINK);
+    });
+
+
+
+
 
 //    connect(revokeAction, &QAction::triggered, [&](){
 //        shapeBase.pop();
@@ -104,9 +114,9 @@ void MainWindow::paintEvent(QPaintEvent *)
     {
         shape->draw(&qPainter);
     }
-    if (currentShape)
+    if (currentObject)
     {
-        currentShape->drawAuxiliary(&qPainter, mousePos, isCtrlPressed);
+        currentObject->drawAuxiliary(&qPainter, mousePos, isCtrlPressed);
     }
 }
 
@@ -141,16 +151,9 @@ void MainWindow::mousePressEvent(QMouseEvent *e)
 {
     mousePos = e->pos();
 
-    if (isCtrlPressed)
-    {
-        Shape::chooseShape(mousePos, true);
-    }
-    else
-    {
-        Shape::chooseShape(mousePos, false);
-    }
+    Shape::chooseShape(mousePos, isCtrlPressed);
 
-    if (!currentShape)
+    if (!currentObject)
     {
         return;
     }
@@ -160,21 +163,21 @@ void MainWindow::mousePressEvent(QMouseEvent *e)
 
     if (capturedPoint)
     {
-        currentShape->addPoint(*capturedPoint, isCtrlPressed);
+        currentObject->clickPoint(*capturedPoint, isCtrlPressed);
     }
     else
     {
-        currentShape->addPoint(mousePos, isCtrlPressed);
+        currentObject->clickPoint(mousePos, isCtrlPressed);
     }
 
-    setStatusBarString(currentShape->getStatus());
+    setStatusBarString(currentObject->getStatus());
 
-    if (!currentShape->isReady())
+    if (!currentObject->isReady())
     {
         return;
     }
 
-    currentShape = nullptr;
+    currentObject = nullptr;
     update();
 }
 
@@ -188,19 +191,19 @@ void MainWindow::keyPressEvent(QKeyEvent *ev)
 
     if(ev->key() == Qt::Key_C)
     {
-        drawShape(SHAPE_CIRCLE);
+        createObject(SHAPE_CIRCLE);
         return;
     }
 
     if(ev->key() == Qt::Key_L)
     {
-        drawShape(SHAPE_LINE);
+        createObject(SHAPE_LINE);
         return;
     }
 
     if(ev->key() == Qt::Key_R)
     {
-        drawShape(SHAPE_RECTANGLE);
+        createObject(SHAPE_RECTANGLE);
         return;
     }
 
@@ -212,27 +215,30 @@ void MainWindow::keyPressEvent(QKeyEvent *ev)
     }
 }
 
-void MainWindow::drawShape(ShapeEnum shapeEnum)
+void MainWindow::createObject(Object_E objectEnum)
 {
-    switch (shapeEnum)
+    switch (objectEnum)
     {
     case SHAPE_LINE:
-        currentShape = new Line();
+        currentObject = new Line();
         break;
     case SHAPE_CIRCLE:
-        currentShape = new Circle();
+        currentObject = new Circle();
         break;
     case SHAPE_RECTANGLE:
-        currentShape = new Rectangle();
+        currentObject = new Rectangle();
+        break;
+    case SOLID_LINK:
+        currentObject = new Link();
         break;
     default:
-        currentShape = nullptr;
+        currentObject = nullptr;
         break;
     }
 
-    if (currentShape)
+    if (currentObject)
     {
-        setStatusBarString(currentShape->getStatus());
+        setStatusBarString(currentObject->getStatus());
     }
     update();
 }

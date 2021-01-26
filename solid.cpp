@@ -2,11 +2,15 @@
 #include <cassert>
 #include <cmath>
 #include "force.h"
+#include "shape.h"
 #include <QDebug>
 #include <iostream>
 
+
 int Solid::globalSolidCount = 0;
 std::unordered_map<int, Solid*> Solid::solidMap;
+SolidSet Solid::solidSet;
+
 
 Solid::Solid(double x, double y, double angle)
     : solidId(globalSolidCount++)
@@ -26,8 +30,8 @@ Solid::Solid(double x, double y, double angle)
 
 Solid::~Solid()
 {
-    assert(Solid::solidMap.find(solidId) != Solid::solidMap.end());
-    Solid::solidMap.erase(solidId);
+    //assert(Solid::solidMap.find(solidId) != Solid::solidMap.end());
+    //Solid::solidMap.erase(solidId);
 }
 
 int Solid::getSolidId() const
@@ -93,8 +97,28 @@ bool Solid::isFix() const
     return isFixed;
 }
 
+void Solid::setChosen(bool isChosen)
+{
+    if (isChosen)
+    {
+        for (Shape *shape : shapeSet)
+        {
+            Shape::pushChosenSet(shape);
+        }
+    }
+    else
+    {
+        Shape::clearChosenSet();
+    }
+}
+
 Solid* Solid::getSolidById(int id)
 {
+    if (INVALID_ID == id)
+    {
+        return nullptr;
+    }
+
     if (Solid::solidMap.find(id) == Solid::solidMap.end())
     {
         return nullptr;
@@ -250,4 +274,31 @@ Vector Solid::getGlobalPosVec()
         globalPosVec.insert(solidVec, 3 * solidIndex, 3 * (solidIndex + 1), 0, 1);
     }
     return globalPosVec;
+}
+
+SolidSet::SolidSet()
+{
+    solidVec.clear();
+}
+
+SolidSet::~SolidSet()
+{
+    for (Solid* &solid : solidVec)
+    {
+        delete solid;
+        solid = nullptr;
+    }
+    solidVec.clear();
+}
+
+void SolidSet::restoreSolid(Solid *solid)
+{
+    assert(nullptr != solid);
+    solidVec.push_back(solid);
+}
+
+void Solid::restoreSolid(Solid *solid)
+{
+    assert(nullptr != solid);
+    Solid::solidSet.restoreSolid(solid);
 }

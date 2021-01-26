@@ -17,7 +17,6 @@ SOURCES += \
     dynamics_method.cpp \
     euler_method.cpp \
     force.cpp \
-    ground.cpp \
     inertial_matrix.cpp \
     line.cpp \
     link.cpp \
@@ -42,13 +41,13 @@ HEADERS += \
     dynamics_method.h \
     euler_method.h \
     force.h \
-    ground.h \
     identity_matrix.h \
     inertial_matrix.h \
     line.h \
     link.h \
     mainwindow.h \
     matrix.h \
+    object.h \
     pid.h \
     point.h \
     pub_include.h \

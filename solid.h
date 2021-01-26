@@ -7,11 +7,27 @@
 #include "inertial_matrix.h"
 #include "pub_include.h"
 #include "point.h"
+#include "object.h"
 
 class Force;
 class Point;
+class Shape;
 
-class Solid
+class Solid;
+
+
+class SolidSet
+{
+public:
+    SolidSet();
+    ~SolidSet();
+    void restoreSolid(Solid *solid);
+
+private:
+    std::vector<Solid*> solidVec;
+};
+
+class Solid : public Object
 {
 public:
     Solid(double x = 0, double y = 0, double angle = 0);
@@ -39,6 +55,7 @@ public:
     Vector getTotalForce() const;
 
     void setGravity(bool isSetGravity);
+    void setChosen(bool isChosen);
 
     Vector toGlobalCordinate(Point &point);
     void addPoint(Point &point);
@@ -54,6 +71,7 @@ public:
     static Vector getGlobalPosVec();
     static Vector getRhsForce();
     static Solid* getSolidById(int id);
+    static void restoreSolid(Solid *solid);
 
 protected:
     Vector posVec; // 位置向量
@@ -69,10 +87,12 @@ protected:
     std::unordered_set<int> constraintSet;
     std::unordered_set<int> forceSet;
     std::unordered_set<int> pointSet; // map of point and point id
+    std::unordered_set<Shape*> shapeSet;
 
 
     static int globalSolidCount;
     static std::unordered_map<int, Solid*> solidMap;
+    static SolidSet solidSet;
 };
 
 #endif // SOLID_H

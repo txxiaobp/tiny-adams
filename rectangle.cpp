@@ -11,7 +11,7 @@ Rectangle::Rectangle(QColor shapeColor, Qt::PenStyle shapeStyle, int shapeWidth,
 }
 
 
-void Rectangle::addPoint(QPoint qPoint, bool extraFlag)
+void Rectangle::clickPoint(QPoint qPoint, bool extraFlag)
 {
     if (leftUpPoint.isNull())
     {
@@ -30,7 +30,7 @@ void Rectangle::addPoint(QPoint qPoint, bool extraFlag)
 
 void Rectangle::draw(QPainter *qPainter)
 {
-    if (!getReady())
+    if (!isReady())
     {
         return;
     }
@@ -55,7 +55,7 @@ QString Rectangle::getStatus()
 
 QPoint* Rectangle::getTempPoint()
 {
-    if (getReady())
+    if (isReady())
     {
         return &leftUpPoint;
     }
@@ -79,7 +79,7 @@ double Rectangle::calDistance(QPoint &qPoint)
     return 0;
 }
 
-bool Rectangle::getReady()
+bool Rectangle::isReady()
 {
     return !leftUpPoint.isNull() && !rightDownPoint.isNull();
 }

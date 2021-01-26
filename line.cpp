@@ -2,6 +2,20 @@
 #include <QDebug>
 
 
+Line::Line(QPoint &sPoint, QPoint &ePoint, int solidId, QColor shapeColor, Qt::PenStyle shapeStyle, int shapeWidth, int shapeChosenWidth)
+    : Shape(solidId, shapeColor, shapeStyle, shapeWidth, shapeChosenWidth)
+    , startPoint(sPoint)
+    , centerPoint(QPoint())
+    , endPoint(ePoint)
+{
+    centerPoint.setX((sPoint.x() + ePoint.x()) / 2);
+    centerPoint.setY((sPoint.y() + ePoint.y()) / 2);
+
+    pointVec.push_back(&startPoint);
+    pointVec.push_back(&centerPoint);
+    pointVec.push_back(&endPoint);
+}
+
 Line::Line(QColor shapeColor, Qt::PenStyle shapeStyle, int shapeWidth, int shapeChosenWidth)
     : Shape(shapeColor, shapeStyle, shapeWidth, shapeChosenWidth)
     , startPoint(QPoint())
@@ -36,7 +50,7 @@ QPoint* Line::getTempPoint()
 }
 
 /* extraFlag为附加标识，对于直线来说，当extraFlag为true时，所画的直线是水平或垂直的 */
-void Line::addPoint(QPoint qPoint, bool extraFlag)
+void Line::clickPoint(QPoint qPoint, bool extraFlag)
 {
     if (startPoint.isNull())
     {
@@ -53,7 +67,7 @@ void Line::addPoint(QPoint qPoint, bool extraFlag)
 
 void Line::draw(QPainter *qPainter)
 {
-    if (!getReady())
+    if (!isReady())
     {
         return;
     }
@@ -134,20 +148,30 @@ QPoint Line::getEndPointWithExtraFlag(QPoint &sPoint, QPoint &ePoint, bool extra
     return QPoint(ePointX, ePointY);
 }
 
-bool Line::getReady()
+bool Line::isReady()
 {
     return !startPoint.isNull() && !endPoint.isNull();
 }
 
 void Line::capturePoint(QPoint &mousePoint)
 {
-    for (QPoint *point : pointVec)
+    for (QPoint *point : this->pointVec)
     {
         double distanceToPoint = Shape::calDistance(*point, mousePoint);
+
         if (distanceToPoint < DISTANCE_THRESHOLD)
         {
             currentCapturedPoint = point;
             break;
         }
     }
+}
+
+void Line::setPoints(const QPoint &sPoint, const QPoint &ePoint)
+{
+    startPoint = sPoint;
+    endPoint = ePoint;
+
+    centerPoint.setX((startPoint.x() + endPoint.x()) / 2);
+    centerPoint.setY((startPoint.y() + endPoint.y()) / 2);
 }
