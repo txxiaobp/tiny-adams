@@ -1,6 +1,6 @@
 #include "sensor.h"
 #include "solid.h"
-#include "matrix.h"
+
 
 
 Sensor::Sensor()

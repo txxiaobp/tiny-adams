@@ -2,8 +2,8 @@
 #define SENSOR_H
 
 #include <unordered_map>
+#include "matrix.h"
 
-class Vector;
 class Solid;
 
 class Sensor

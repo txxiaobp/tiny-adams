@@ -4,3 +4,8 @@ Controller::Controller()
 {
 
 }
+
+Controller::~Controller()
+{
+
+}

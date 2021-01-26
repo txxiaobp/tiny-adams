@@ -6,7 +6,7 @@ class Controller
 {
 public:
     Controller();
-    ~Controller();
+    virtual ~Controller();
 };
 
 #endif // CONTROLLER_H
